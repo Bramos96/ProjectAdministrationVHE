@@ -1,0 +1,41 @@
+2025-07-17 09:16:10,609 [INFO] \U0001f680 START SYNC PROCESS
+2025-07-17 09:16:10,609 [INFO] \u27a1 Start script: workingfile_to_overview.py
+2025-07-17 09:16:14,373 [INFO] Bestand overschreven: C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output\Overzicht_Projectadministratie_Week29_2025.xlsx
+Gewijzigde celwaarden: 1
+
+2025-07-17 09:16:14,373 [INFO] \u2705 Script workingfile_to_overview.py succesvol afgerond.
+2025-07-17 09:16:14,373 [INFO] \u27a1 Start script: read_latest_input.py
+2025-07-17 09:16:17,869 [INFO] Klaar, opgeslagen als: Overzicht_Projectadministratie_Week29_2025.xlsx
+
+2025-07-17 09:16:17,869 [INFO] \u2705 Script read_latest_input.py succesvol afgerond.
+2025-07-17 09:16:17,869 [INFO] \u27a1 Start script: calculate_conclusions.py
+2025-07-17 09:16:22,190 [INFO]  Conclusies bijgewerkt in bestand: Overzicht_Projectadministratie_Week29_2025.xlsx
+
+2025-07-17 09:16:22,190 [INFO] \u2705 Script calculate_conclusions.py succesvol afgerond.
+2025-07-17 09:16:22,191 [INFO] \u27a1 Start script: overview_to_workingfile.py
+2025-07-17 09:16:24,979 [ERROR] \u274c Fout in script: overview_to_workingfile.py
+2025-07-17 09:16:24,979 [ERROR] 
+2025-07-17 09:16:24,979 [ERROR] Traceback (most recent call last):
+  File "C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Scripts\Subs\overview_to_workingfile.py", line 161, in <module>
+    print(f"\u2705 Werkbestand gegenereerd en gestyled: {out_path}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bram.gerrits\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>
+
+2025-07-17 09:16:24,980 [ERROR] \u274c Er is een fout opgetreden tijdens het sync-proces.
+Traceback (most recent call last):
+  File "C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Scripts\sync.py", line 67, in main
+    run_script("overview_to_workingfile.py")
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Scripts\sync.py", line 38, in run_script
+    result = subprocess.run(
+        ["python", path],
+    ...<2 lines>...
+        check=True
+    )
+  File "C:\Users\bram.gerrits\AppData\Local\Programs\Python\Python313\Lib\subprocess.py", line 579, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['python', 'C:\\Users\\bram.gerrits\\Desktop\\Automations\\ProjectAdministration\\Scripts\\Subs\\overview_to_workingfile.py']' returned non-zero exit status 1.

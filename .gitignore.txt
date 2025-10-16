@@ -1,0 +1,25 @@
+# OS & editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# Node/JS
+node_modules/
+dist/
+build/
+
+# Logs & cache
+*.log
+*.sqlite
+*.db
+*.pid
+*.cache/
+coverage/

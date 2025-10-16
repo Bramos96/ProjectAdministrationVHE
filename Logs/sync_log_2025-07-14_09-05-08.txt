@@ -1,0 +1,70 @@
+2025-07-14 09:05:08,417 [INFO] \U0001f680 START SYNC PROCESS
+2025-07-14 09:05:08,417 [INFO] \u27a1 Start script: workingfile_to_overview.py
+2025-07-14 09:05:11,987 [INFO] Bestand overschreven: C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output\Overzicht_Projectadministratie_Week28_2025.xlsx
+Gewijzigde celwaarden: 0
+
+2025-07-14 09:05:11,987 [INFO] \u2705 Script workingfile_to_overview.py succesvol afgerond.
+2025-07-14 09:05:11,987 [INFO] \u27a1 Start script: read_latest_input.py
+2025-07-14 09:05:14,177 [INFO] 
+ Verwerk bestand: export2 (25).xlsx
+'Order'
+'Selc'
+'Orderdeb'
+'Naam'
+'Referentie'
+'Orderdatum'
+'Bedrag'
+'Bedrag val'
+'Val'
+'Koers'
+'Ver'
+'Project'
+'Route'
+'Leverdatum'
+'Factdeb'
+'Naam.1'
+'Niet toegewezen regel(s)'
+'Projectstatus'
+ Selcode ontbreekt in sub dataframe.
+
+ Verwerk bestand: export1 (71).xlsx
+'Project'
+'Projectleider'
+'Klant'
+'Omschrijving'
+'Startdatum'
+'Einddatum'
+'Status'
+'Bud.Opbr.'
+'Bud.Kost.'
+'Bud. Resultaat'
+'Opbrengsten'
+'Kosten'
+'Resultaat'
+'Afwijking budget'
+'Lst. leverdatum'
+'Selcode'
+'Afsl.dat.order'
+'Volg.lev.dat.'
+'Ref. klant'
+'Magazijn'
+ Selcode gevonden in sub dataframe!
+Projectnummer
+31133439        Orders Projecten
+31135927        Orders Projecten
+31138159    Orders Kabelafdeling
+31139191        Orders Projecten
+31139211        Orders Projecten
+Name: Selcode, dtype: object
+ Klaar, opgeslagen als: Overzicht_Projectadministratie_Week29_2025.xlsx
+
+2025-07-14 09:05:14,183 [INFO] \u2705 Script read_latest_input.py succesvol afgerond.
+2025-07-14 09:05:14,183 [INFO] \u27a1 Start script: calculate_conclusions.py
+2025-07-14 09:05:17,077 [INFO]  Conclusies bijgewerkt in bestand: Overzicht_Projectadministratie_Week29_2025.xlsx
+
+2025-07-14 09:05:17,077 [INFO] \u2705 Script calculate_conclusions.py succesvol afgerond.
+2025-07-14 09:05:17,077 [INFO] \u27a1 Start script: overview_to_workingfile.py
+2025-07-14 09:05:19,141 [INFO]  Werkbestand gegenereerd en gestyled: C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output\Werkbestand_AlleProjecten_2025-07-14.xlsx
+
+2025-07-14 09:05:19,142 [INFO] \u2705 Script overview_to_workingfile.py succesvol afgerond.
+2025-07-14 09:05:19,142 [INFO] \u2705 SYNC-PROCES SUCCESVOL AFGEROND

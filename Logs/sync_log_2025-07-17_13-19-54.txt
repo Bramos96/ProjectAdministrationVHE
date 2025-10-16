@@ -1,0 +1,52 @@
+2025-07-17 13:19:54,813 [INFO] \U0001f680 START SYNC PROCESS
+2025-07-17 13:19:54,813 [INFO] \u27a1 Start script: workingfile_to_overview.py
+2025-07-17 13:19:57,340 [INFO] Bestand overschreven: C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output\Overzicht_Projectadministratie_Week29_2025.xlsx
+Gewijzigde celwaarden: 2194
+
+2025-07-17 13:19:57,341 [INFO] \u2705 Script workingfile_to_overview.py succesvol afgerond.
+2025-07-17 13:19:57,341 [INFO] \u27a1 Start script: read_latest_input.py
+2025-07-17 13:19:58,736 [ERROR] \u274c Fout in script: read_latest_input.py
+2025-07-17 13:19:58,743 [ERROR] 
+2025-07-17 13:19:58,743 [ERROR] >> After reading CENTRAL:
+Empty DataFrame
+Columns: [Algemene informatie, Actiepunten Overig, Verwacht resultaat]
+Index: []
+Inspecting styles in Werkbestand: C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output\Werkbestand_AlleProjecten_2025-07-17.xlsx
+Could not find 'Verwacht resultaat' header in Werkbestand.
+Traceback (most recent call last):
+  File "C:\Users\bram.gerrits\AppData\Local\Programs\Python\Python313\Lib\site-packages\pandas\core\indexes\base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\\_libs\\hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\\_libs\\hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Soort'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Scripts\Subs\read_latest_input.py", line 137, in <module>
+    mask = mapping_df["Soort"].str.strip().str.lower() == "input"
+           ~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\bram.gerrits\AppData\Local\Programs\Python\Python313\Lib\site-packages\pandas\core\frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+  File "C:\Users\bram.gerrits\AppData\Local\Programs\Python\Python313\Lib\site-packages\pandas\core\indexes\base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Soort'
+
+2025-07-17 13:19:58,744 [ERROR] \u274c Er is een fout opgetreden tijdens het sync-proces.
+Traceback (most recent call last):
+  File "C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Scripts\sync.py", line 61, in main
+    run_script("read_latest_input.py")
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Scripts\sync.py", line 38, in run_script
+    result = subprocess.run(
+        ["python", path],
+    ...<2 lines>...
+        check=True
+    )
+  File "C:\Users\bram.gerrits\AppData\Local\Programs\Python\Python313\Lib\subprocess.py", line 579, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['python', 'C:\\Users\\bram.gerrits\\Desktop\\Automations\\ProjectAdministration\\Scripts\\Subs\\read_latest_input.py']' returned non-zero exit status 1.
