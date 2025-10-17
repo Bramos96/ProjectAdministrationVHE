@@ -1,11 +1,5 @@
 README – Projectadministratie Automatisering
 
-📁 ARCHIVE  
-Bevat oude versies van:  
-- Overzicht Projectadministratie (back-ups)  
-- Geëxporteerde overzichten per week  
-Bestandsnaam bij voorkeur met datumnotatie (YYYY-MM-DD)  
-
 📁 INPUT  
 Hier worden nieuwe projectexports geplaatst (wekelijks of 2-wekelijks).  
 Bijv. afkomstig uit Sumatra.  
@@ -22,9 +16,6 @@ Bijv. log_2025-06-01.txt met:
 - Fouten  
 - Overgeslagen projecten  
 
-📁 OVERIG  
-Voor losse bestanden, checklists of tijdelijke testjes.  
-Bijv. opmerkingenbestand, kolommapping, brainstormnotities.  
 
 📄 Overzicht Projectadministratie.xlsx  
 Dit is het centrale projectbestand.  
