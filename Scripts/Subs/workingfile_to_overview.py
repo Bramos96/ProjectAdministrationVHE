@@ -12,7 +12,8 @@ OUTPUT_FOLDER = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministratio
 SYNC_COLUMNS = [
     "Algemene informatie",
     "Verwacht resultaat",     # Gets value from "Aangepast resultaat" if not empty
-    "Actiepunten Bram"
+    "Actiepunten Bram",
+    "2e Projectleider"
 ]
 
 MANUAL_INPUT_COLUMN = "Aangepast resultaat"
@@ -71,7 +72,9 @@ def main():
             "actiepunten bram": "actiepunten bram",       # FIX ✅
             "verwacht resultaat": "verwacht resultaat",
             "aangepast resultaat": "aangepast resultaat",
-            "algemene informatie": "algemene informatie"
+            "algemene informatie": "algemene informatie",
+            "2e projectleider": "2e projectleider"
+
         }
         df_work.rename(columns=column_mapping, inplace=True)
 
@@ -109,6 +112,19 @@ def main():
             for cell in header_row:
                 if cell.value and cell.value.strip() == EXTRA_STATUS_COL:
                     col_map[EXTRA_STATUS_COL] = get_column_letter(cell.column)
+
+                # --- 4b. Zorg dat alle SYNC_COLUMNS als header bestaan; voeg ontbrekende toe en map ze ---
+        existing_headers = [c.value.strip() for c in ws[1] if c.value]
+        for needed in SYNC_COLUMNS:
+            if needed not in existing_headers:
+                ws.cell(row=1, column=ws.max_column + 1, value=needed)
+                col_map[needed] = get_column_letter(ws.max_column)
+            else:
+                if needed not in col_map:  # als header er wel was maar nog niet gemapt
+                    for cell in ws[1]:
+                        if cell.value and cell.value.strip() == needed:
+                            col_map[needed] = get_column_letter(cell.column)
+
 
         # 5. Synchroniseer
         updates = 0

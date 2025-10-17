@@ -26,7 +26,8 @@ HANDMATE_COLUMNS = [
     "Bespreekpunten",         
     "Actiepunten Bram",       
     "Verwacht resultaat",
-    "Actiepunten Projectleider",    
+    "Actiepunten Projectleider",
+    "2e Projectleider",    
 ]
 
 FLAG_COL = "Handmatig verwacht resultaat" # Een variable die die later gebruikt wordt om "Verwacht resultaat" te berekenen.
