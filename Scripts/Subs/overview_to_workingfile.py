@@ -155,14 +155,15 @@ header_map = {
 # Zorg dat onderstaande kolommen sowieso bestaan in header_map
 for col in [
     "Projectleider",
+    "2e Projectleider",
     "Omschrijving",
     "Verwacht resultaat",
     "Aangepast resultaat",
     "Algemene informatie",
-    "Actiepunten Bram",          # (was Overig)
+    "Actiepunten Bram",          
     "Actiepunten Projectleider",
-    "Bespreekpunten",            # (was Actiepunten Bram)
-    "Actiepunten Elders",        # ← NIEUW
+    "Bespreekpunten",            
+    "Actiepunten Elders",        
     "Resultaat gewijzigd",
 ]:
     header_map.setdefault(col, col)
@@ -189,7 +190,9 @@ if "Aangepast resultaat" not in template_headers:
 # 6) Enforce visual order
 move_column_after(ws, "Verwacht resultaat", "Omschrijving")
 move_column_after(ws, "Aangepast resultaat", "Verwacht resultaat")
-move_column_after(ws, "Actiepunten Bram", "Algemene informatie")  # (was Overig)
+move_column_after(ws, "Actiepunten Bram", "Algemene informatie")
+move_column_after(ws, "2e Projectleider", "Projectleider")
+
 
 # 7) Map the template's visible columns after any moves/renames
 template_cols = {}
@@ -222,7 +225,8 @@ thin_grey = Border(
 )
 
 # Editable inputs (no fill + thin borders)
-editable_cols = {"Aangepast resultaat", "Algemene informatie", "Actiepunten Bram"}
+editable_cols = {"Aangepast resultaat", "Algemene informatie", "Actiepunten Bram", "2e Projectleider"}
+
 
 # 9) Write data rows (starting at row 3) with manual/auto logic for VR/AR
 start_row = 3
@@ -289,13 +293,14 @@ for row_idx, row in df_iter.iterrows():
             val = row[std]
 
             # Editable tekstkolommen: geen fill, wel rand
-            if werk in {"Algemene informatie", "Actiepunten Bram"}:
+            if werk in editable_cols:
                 cell = ws.cell(row=r, column=c, value=val if pd.notna(val) else "")
                 cell.fill = PatternFill(fill_type=None)
                 cell.border = thin_grey
                 cell.font = data_font
                 cell.alignment = align_style
                 continue
+
 
             # Bullet-normalisatie
             # Bullet-normalisatie
