@@ -371,6 +371,25 @@ if "Verwacht resultaat" in df_merged.columns and \
         pd.to_numeric(df_merged.loc[mask, "Budget Kosten"], errors="coerce").fillna(0)
     )
 
+# 12b) Bereken Werkelijk resultaat
+if "Werkelijke opbrengsten" in df_merged.columns and "Werkelijke kosten" in df_merged.columns:
+
+    if "Werkelijk resultaat" not in df_merged.columns:
+        df_merged["Werkelijk resultaat"] = pd.NA
+
+    # Alleen berekenen als er nog niets in staat
+    mask_wr = (
+        df_merged["Werkelijk resultaat"].isna() |
+        (df_merged["Werkelijk resultaat"].astype(str).str.strip() == "")
+    )
+
+    df_merged.loc[mask_wr, "Werkelijk resultaat"] = (
+        pd.to_numeric(df_merged.loc[mask_wr, "Werkelijke opbrengsten"], errors="coerce").fillna(0) -
+        pd.to_numeric(df_merged.loc[mask_wr, "Werkelijke kosten"], errors="coerce").fillna(0)
+    )
+
+
+
 
 # 13) Datumformatting
 for col in ["Einddatum", "Eerstvolgende leverdatum", "Leverdatum"]:
@@ -387,7 +406,7 @@ if "Versielog" in df_merged.columns:
 currency_cols = [
     "Budget Kosten", "Budget Opbrengsten",
     "Werkelijke kosten", "Werkelijke opbrengsten",
-    "Verwacht resultaat"
+    "Verwacht resultaat", "Werkelijk resultaat"
 ]
 
 for col in currency_cols:
