@@ -189,44 +189,74 @@ def main():
         col_letters["Bespreekpunten"] = col_letter_new
         ws.column_dimensions[col_letter_new].width = 50  # startbreedte
 
-    # Update Actiepunten Projectleider
+            # Update Actiepunten Projectleider
     if "Actiepunten Projectleider" in col_letters:
         col_letter = col_letters["Actiepunten Projectleider"]
+        removed_count = 0
+        updated_count = 0
         for idx, text in enumerate(df["Actiepunten Projectleider"], start=2):
             cell = ws[f"{col_letter}{idx}"]
+            text = (text or "").strip()
             if text:
                 cell.value = text
                 cell.alignment = Alignment(wrap_text=True)
                 lines = text.count("\n") + 1
-                # houd bestaande hoogte aan als die groter is
                 current_h = ws.row_dimensions[idx].height or 0
                 ws.row_dimensions[idx].height = max(current_h, lines * 15)
+                updated_count += 1
+            else:
+                if cell.value not in (None, ""):
+                    removed_count += 1
+                    print(f"❌ Oude conclusie verwijderd bij rij {idx}")
+                cell.value = None
+                ws.row_dimensions[idx].height = None
+        print(f"✅ Projectleider: {updated_count} bijgewerkt, {removed_count} verwijderd")
 
-    # Update Bespreekpunten (automatic) — NIET Actiepunten Bram
+    # Update Bespreekpunten (automatic)
     if "Bespreekpunten" in col_letters:
         col_letter = col_letters["Bespreekpunten"]
+        removed_count = 0
+        updated_count = 0
         for idx, text in enumerate(df["Bespreekpunten"], start=2):
             cell = ws[f"{col_letter}{idx}"]
+            text = (text or "").strip()
             if text:
                 cell.value = text
                 cell.alignment = Alignment(wrap_text=True)
                 lines = text.count("\n") + 1
                 current_h = ws.row_dimensions[idx].height or 0
                 ws.row_dimensions[idx].height = max(current_h, lines * 15)
+                updated_count += 1
+            else:
+                if cell.value not in (None, ""):
+                    removed_count += 1
+                    print(f"❌ Oude bespreekpunt verwijderd bij rij {idx}")
+                cell.value = None
+                ws.row_dimensions[idx].height = None
+        print(f"✅ Bespreekpunten: {updated_count} bijgewerkt, {removed_count} verwijderd")
 
-    
     # Update Actiepunten Elders
     if "Actiepunten Elders" in col_letters:
         col_letter = col_letters["Actiepunten Elders"]
+        removed_count = 0
+        updated_count = 0
         for idx, text in enumerate(df["Actiepunten Elders"], start=2):
+            cell = ws[f"{col_letter}{idx}"]
+            text = (text or "").strip()
             if text:
-                cell = ws[f"{col_letter}{idx}"]
                 cell.value = text
                 cell.alignment = Alignment(wrap_text=True)
                 lines = text.count("\n") + 1
                 current_h = ws.row_dimensions[idx].height or 0
                 ws.row_dimensions[idx].height = max(current_h, lines * 15)
-
+                updated_count += 1
+            else:
+                if cell.value not in (None, ""):
+                    removed_count += 1
+                    print(f"❌ Oude actiepunt (elders) verwijderd bij rij {idx}")
+                cell.value = None
+                ws.row_dimensions[idx].height = None
+        print(f"✅ Actiepunten Elders: {updated_count} bijgewerkt, {removed_count} verwijderd")
 
     # Maak kolommen breder
     for col_name in ["Actiepunten Projectleider", "Bespreekpunten"]:
