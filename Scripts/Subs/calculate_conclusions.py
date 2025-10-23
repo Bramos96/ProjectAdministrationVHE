@@ -169,6 +169,30 @@ def main():
     df["Bespreekpunten"] = df.apply(make_bespreekpunten, axis=1)
     df["Actiepunten Elders"] = df.apply(make_actiepunten_elders, axis=1)
 
+# ─── Onderdruk actiepunten als er 'gesloten SO' voorkomt ──────────────────────────
+    def _contains_gesloten_so(s: str) -> bool:
+        return isinstance(s, str) and ("gesloten so" in s.lower())
+
+    SUPPRESS_PL_LINES = {
+        "• Einddatum verlopen",
+        "• Leverdatum(s) verlopen",
+        "• Budget kosten toevoegen",
+        "• Budget opbrengsten toevoegen",
+    }
+
+    def _suppress_if_gesloten_so(row):
+        has_gs = _contains_gesloten_so(row.get("Bespreekpunten", "")) or \
+                 _contains_gesloten_so(row.get("Actiepunten Elders", ""))
+        txt = row.get("Actiepunten Projectleider", "")
+        if not has_gs or not isinstance(txt, str) or not txt.strip():
+            return txt
+        kept = [line for line in txt.split("\n") if line.strip() not in SUPPRESS_PL_LINES]
+        return "\n".join(kept)
+
+    before_count = df["Actiepunten Projectleider"].astype(str).str.count("•").sum()
+    df["Actiepunten Projectleider"] = df.apply(_suppress_if_gesloten_so, axis=1)
+    after_count = df["Actiepunten Projectleider"].astype(str).str.count("•").sum()
+    print(f"🧹 'Gesloten SO' onderdrukking toegepast: {int(before_count - after_count)} regels verwijderd")
 
     # 4) Schrijf terug naar Excel
     wb = load_workbook(path)
