@@ -157,6 +157,7 @@ for col in [
     "Projectleider",
     "2e Projectleider",
     "Omschrijving",
+    "Werkelijk resultaat",
     "Verwacht resultaat",
     "Aangepast resultaat",
     "Algemene informatie",
@@ -188,7 +189,8 @@ if "Aangepast resultaat" not in template_headers:
     ws.cell(row=2, column=insert_at, value="Aangepast resultaat")
 
 # 6) Enforce visual order
-move_column_after(ws, "Verwacht resultaat", "Omschrijving")
+move_column_after(ws, "Werkelijk resultaat", "Omschrijving")
+move_column_after(ws, "Verwacht resultaat", "Werkelijk resultaat")
 move_column_after(ws, "Aangepast resultaat", "Verwacht resultaat")
 move_column_after(ws, "Actiepunten Bram", "Algemene informatie")
 move_column_after(ws, "2e Projectleider", "Projectleider")
@@ -315,8 +317,9 @@ for row_idx, row in df_iter.iterrows():
                 cell.font = data_font
             cell.alignment = align_style
 
-            if werk == "Verwacht resultaat" and isinstance(val, (int, float)):
+            if werk in {"Verwacht resultaat", "Werkelijk resultaat"} and isinstance(val, (int, float)):
                 cell.number_format = "€ #,##0"
+
 
     # --- 9c) Rijbanding (niet op editable kolommen) ---
     fill = even_fill if row_idx % 2 == 0 else odd_fill
