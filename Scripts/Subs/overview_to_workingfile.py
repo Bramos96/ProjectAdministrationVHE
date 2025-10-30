@@ -128,6 +128,34 @@ overview_path = find_latest_overview(OUTPUT_FOLDER)
 df = pd.read_excel(overview_path, header=0, engine="openpyxl")
 df.columns = df.columns.str.strip()
 
+# ── BUILD LIST OF PROJECTS TO CLOSE ("Afsluiten" tab) ──
+CLOSE_COLS = [
+    "Projectnummer",
+    "Projectleider",
+    "Klant",
+    "Omschrijving",
+    "Actiepunten Bram",
+]
+
+# subset with just the relevant columns (ignore if some don't exist)
+close_view_df = df[[c for c in CLOSE_COLS if c in df.columns]].copy()
+
+# patterns that mean "wrap up / close / finalize"
+_PATTERNS = ["sluit", "afsluit", "afhandel", "afhand"]
+
+if "Actiepunten Bram" in close_view_df.columns:
+    mask_close = (
+        close_view_df["Actiepunten Bram"]
+        .astype(str)
+        .str.lower()
+        .apply(lambda txt: any(p in txt for p in _PATTERNS))
+    )
+    to_close_df = close_view_df[mask_close].copy()
+else:
+    # if Actiepunten Bram doesn't exist, just create an empty df with same cols
+    to_close_df = close_view_df.iloc[0:0].copy()
+# ── END BUILD LIST ──
+
 # (optioneel: korte log om te zien wat er in de vlag-kolom staat)
 if "Handmatig verwacht resultaat" in df.columns:
     try:
@@ -370,6 +398,63 @@ for werk, col_idx in template_cols.items():
 first_col = get_column_letter(min_col)
 last_col  = get_column_letter(max_col)
 ws.auto_filter.ref = f"{first_col}2:{last_col}{total_rows}"
+
+# ── FILL SECOND SHEET ("Afsluiten") WITH to_close_df ──
+SHEET2_NAME = "Sheet2"  # tabnaam in template
+
+if SHEET2_NAME in wb.sheetnames:
+    ws_close = wb[SHEET2_NAME]
+
+    # We assume:
+    # Row 1 = your blue info bar (keep it exactly as-is)
+    # Row 2 = header row with the actual column labels
+    # Row 3+ = data rows we generate
+
+    HEADER_ROW = 2
+    START_DATA_ROW = 3
+
+    # 1. Determine target column order based on row 2 headers
+    cols_final = []
+    for cell in ws_close[HEADER_ROW]:
+        if cell.value and cell.value in to_close_df.columns:
+            cols_final.append(cell.value)
+
+    # 2. Clear old data rows from START_DATA_ROW downwards (but keep styling in row 1 and 2)
+    max_rows = ws_close.max_row
+    max_cols = ws_close.max_column
+    for r in range(START_DATA_ROW, max_rows + 1):
+        for c in range(1, max_cols + 1):
+            ws_close.cell(row=r, column=c).value = None
+
+    # 3. Write new data starting at START_DATA_ROW
+    out_row = START_DATA_ROW
+    for _, row_vals in to_close_df.iterrows():
+        for c_idx, col_name in enumerate(cols_final, start=1):
+            val = row_vals[col_name]
+
+            # multiline cleanup for long text fields
+            if col_name in ["Omschrijving", "Actiepunten Bram"] and isinstance(val, str):
+                parts = [p.strip() for p in val.replace(";", "\n").split("\n") if p.strip()]
+                val = "\n".join(parts)
+
+            cell = ws_close.cell(row=out_row, column=c_idx, value=val)
+            cell.alignment = Alignment(horizontal="left",
+                                       vertical="top",
+                                       wrap_text=True)
+
+        ws_close.row_dimensions[out_row].height = 40
+        out_row += 1
+
+    # 4. Autofilter: apply starting from header row
+    if cols_final:
+        first_col_letter = get_column_letter(1)
+        last_col_letter = get_column_letter(len(cols_final))
+        last_data_row = out_row - 1  # last row we wrote
+        ws_close.auto_filter.ref = f"{first_col_letter}{HEADER_ROW}:{last_col_letter}{last_data_row}"
+
+    # 5. Freeze panes so header row stays visible when scrolling
+    ws_close.freeze_panes = f"A{START_DATA_ROW}"
+# ── END SECOND SHEET FILL ──
 
 
 # 15) Archive old workfiles, then save new one in Output root
