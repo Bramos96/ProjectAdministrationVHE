@@ -135,12 +135,14 @@ CLOSE_COLS = [
     "Klant",
     "Omschrijving",
     "Actiepunten Bram",
+    "Actiepunten Elders",
+    "Bespreekpunten",
 ]
 
-# subset with just the relevant columns (ignore if some don't exist)
+# subset met alleen de kolommen die echt bestaan in df
 close_view_df = df[[c for c in CLOSE_COLS if c in df.columns]].copy()
 
-# patterns that mean "wrap up / close / finalize"
+# zoekwoorden voor bepalen of dit project in Sheet2 hoort
 _PATTERNS = ["sluit", "afsluit", "afhandel", "afhand"]
 
 if "Actiepunten Bram" in close_view_df.columns:
@@ -152,9 +154,55 @@ if "Actiepunten Bram" in close_view_df.columns:
     )
     to_close_df = close_view_df[mask_close].copy()
 else:
-    # if Actiepunten Bram doesn't exist, just create an empty df with same cols
     to_close_df = close_view_df.iloc[0:0].copy()
+
+# ── Bepaal 'Eindacties' per project ─────────────────────────
+# regels die we willen herkennen
+STATUS_CANDIDATES = [
+    "Gesloten SO met openstaande bestelling",
+    "Gesloten SO met openstaande PO - Proto",
+    "Gesloten SO, maar openstaande SO dochterproject",
+    "Gesloten SO met openstaande PO - Prod",
+]
+
+def extract_eindactie(row):
+    # Combineer relevante bronnen in één tekst
+    text_parts = []
+    if "Actiepunten Elders" in row and pd.notna(row["Actiepunten Elders"]):
+        text_parts.append(str(row["Actiepunten Elders"]))
+    if "Bespreekpunten" in row and pd.notna(row["Bespreekpunten"]):
+        text_parts.append(str(row["Bespreekpunten"]))
+
+    combined = "\n".join(text_parts)
+
+    # Kijk of één van de bekende statussen letterlijk voorkomt
+    for status in STATUS_CANDIDATES:
+        if status.lower() in combined.lower():
+            return status
+
+    # Geen match
+    return ""
+
+# nieuwe kolom toevoegen
+to_close_df["Eindacties"] = to_close_df.apply(extract_eindactie, axis=1)
+
+# eventueel: we willen 'Actiepunten Elders' en 'Bespreekpunten' niet direct in Sheet2 dumpen,
+# dus we laten alleen de kolommen over die we wél willen laten zien.
+# (Sheet2 bepaalt straks zelf de kolomvolgorde, maar hij moet de kolommennamen herkennen.)
+cols_keep_for_output = [
+    "Projectnummer",
+    "Projectleider",
+    "Klant",
+    "Omschrijving",
+    "Actiepunten Bram",
+    "Eindacties",
+    # 'Finale check' staat wel in template maar laten we leeg invullen in Excel,
+    # dus die hoeft hier niet in pandas te bestaan.
+]
+# laat eventuele missende kolommen gewoon weg zonder crash
+to_close_df = to_close_df[[c for c in cols_keep_for_output if c in to_close_df.columns]].copy()
 # ── END BUILD LIST ──
+
 
 # (optioneel: korte log om te zien wat er in de vlag-kolom staat)
 if "Handmatig verwacht resultaat" in df.columns:
@@ -414,10 +462,16 @@ if SHEET2_NAME in wb.sheetnames:
     START_DATA_ROW = 3
 
     # 1. Determine target column order based on row 2 headers
+    #    We nemen kolommen mee die in to_close_df zitten,
+    #    plus 'Eindacties' en 'Finale check' zodat we daar later kleur op kunnen zetten.
     cols_final = []
     for cell in ws_close[HEADER_ROW]:
-        if cell.value and cell.value in to_close_df.columns:
-            cols_final.append(cell.value)
+        header_val = cell.value
+        if not header_val:
+            continue
+        if header_val in to_close_df.columns or header_val in ["Eindacties", "Finale check"]:
+            cols_final.append(header_val)
+
 
     # 2. Clear old data rows from START_DATA_ROW downwards (but keep styling in row 1 and 2)
     max_rows = ws_close.max_row
@@ -430,20 +484,70 @@ if SHEET2_NAME in wb.sheetnames:
     out_row = START_DATA_ROW
     for _, row_vals in to_close_df.iterrows():
         for c_idx, col_name in enumerate(cols_final, start=1):
-            val = row_vals[col_name]
 
-            # multiline cleanup for long text fields
-            if col_name in ["Omschrijving", "Actiepunten Bram"] and isinstance(val, str):
-                parts = [p.strip() for p in val.replace(";", "\n").split("\n") if p.strip()]
-                val = "\n".join(parts)
+            # alleen schrijven als deze kolom echt bestaat in to_close_df
+            if col_name in to_close_df.columns:
+                val = row_vals[col_name]
 
-            cell = ws_close.cell(row=out_row, column=c_idx, value=val)
-            cell.alignment = Alignment(horizontal="left",
-                                       vertical="top",
-                                       wrap_text=True)
+                # multiline cleanup voor langere tekstvelden
+                if col_name in ["Omschrijving", "Actiepunten Bram"] and isinstance(val, str):
+                    parts = [p.strip() for p in val.replace(";", "\n").split("\n") if p.strip()]
+                    val = "\n".join(parts)
+
+                cell = ws_close.cell(row=out_row, column=c_idx, value=val)
+                cell.alignment = Alignment(
+                    horizontal="left",
+                    vertical="top",
+                    wrap_text=True
+                )
+            else:
+                # bv. 'Finale check' staat wel als header in Excel maar niet in to_close_df
+                # -> cel leeg laten, maar wel alignment en rijhoogte consistent houden
+                cell = ws_close.cell(row=out_row, column=c_idx, value=None)
+                cell.alignment = Alignment(
+                    horizontal="left",
+                    vertical="top",
+                    wrap_text=True
+                )
 
         ws_close.row_dimensions[out_row].height = 40
         out_row += 1
+
+    # 3b. Color 'Finale check' based on 'Eindacties'
+    from openpyxl.styles import PatternFill
+
+    green_fill = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")   # zacht groen
+    orange_fill = PatternFill(start_color="FFD7B5", end_color="FFD7B5", fill_type="solid") # zacht oranje
+
+    # Zoek kolomindexen voor 'Eindacties' en 'Finale check' in cols_final
+    col_eindacties = None
+    col_finalecheck = None
+    for idx, name in enumerate(cols_final, start=1):
+        if name == "Eindacties":
+            col_eindacties = idx
+        if name == "Finale check":
+            col_finalecheck = idx
+
+    # Alleen kleuren als we een 'Finale check'-kolom in de sheet hebben
+    if col_finalecheck is not None:
+        # Data rows lopen van START_DATA_ROW t/m out_row-1
+        for r in range(START_DATA_ROW, out_row):
+            eind_val = ""
+            if col_eindacties is not None:
+                eind_val = ws_close.cell(row=r, column=col_eindacties).value
+
+            target_cell = ws_close.cell(row=r, column=col_finalecheck)
+
+            if not eind_val or str(eind_val).strip() == "":
+                # geen eindactie -> groen (klaar om af te ronden)
+                target_cell.fill = green_fill
+            else:
+                # wel eindactie -> oranje (nog iets te doen)
+                target_cell.fill = orange_fill
+
+            # we zorgen ook dat dit vak zichtbaar is qua hoogte
+            ws_close.row_dimensions[r].height = 40
+
 
     # 4. Autofilter: apply starting from header row
     if cols_final:
