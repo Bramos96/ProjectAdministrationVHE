@@ -33,7 +33,7 @@ def run_script(script_name):
     Run a Python script via subprocess and log output.
     """
     path = os.path.join(SCRIPTS_DIR, script_name)
-    logging.info(f"➡ Start script: {script_name}")
+    logging.info(f" Start script: {script_name}")
     try:
         result = subprocess.run(
             ["python", path],

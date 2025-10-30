@@ -1,0 +1,31 @@
+2025-10-30 12:16:29,582 [INFO] \U0001f680 START SYNC PROCESS
+2025-10-30 12:16:29,582 [INFO] \u27a1 Start script: workingfile_to_overview.py
+2025-10-30 12:16:30,960 [ERROR] \u274c Fout in script: workingfile_to_overview.py
+2025-10-30 12:16:30,960 [ERROR] 
+2025-10-30 12:16:30,960 [ERROR] Traceback (most recent call last):
+  File "C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Scripts\Subs\workingfile_to_overview.py", line 189, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Scripts\Subs\workingfile_to_overview.py", line 56, in main
+    print(" Tool 1: Synchroniseer werkbestand \u2192 centraal bestand")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bram.gerrits\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 35: character maps to <undefined>
+
+2025-10-30 12:16:30,961 [ERROR] \u274c Er is een fout opgetreden tijdens het sync-proces.
+Traceback (most recent call last):
+  File "c:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Scripts\Sync.py", line 58, in main
+    run_script("workingfile_to_overview.py")
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Scripts\Sync.py", line 38, in run_script
+    result = subprocess.run(
+        ["python", path],
+    ...<2 lines>...
+        check=True
+    )
+  File "C:\Users\bram.gerrits\AppData\Local\Programs\Python\Python313\Lib\subprocess.py", line 579, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['python', 'C:\\Users\\bram.gerrits\\Desktop\\Automations\\ProjectAdministration\\Scripts\\Subs\\workingfile_to_overview.py']' returned non-zero exit status 1.

@@ -131,7 +131,7 @@ df.columns = df.columns.str.strip()
 # (optioneel: korte log om te zien wat er in de vlag-kolom staat)
 if "Handmatig verwacht resultaat" in df.columns:
     try:
-        print("🔎 Uniek in 'Handmatig verwacht resultaat':",
+        print(" Uniek in 'Handmatig verwacht resultaat':",
               df["Handmatig verwacht resultaat"].astype(str).str.strip().unique().tolist())
     except Exception:
         pass
@@ -180,7 +180,7 @@ if hasattr(ws, "_tables"):
 # 4) Ensure 'Aangepast resultaat' exists
 template_headers = [str(cell.value).strip() for cell in ws[2] if cell.value is not None]
 if "Aangepast resultaat" not in template_headers:
-    print("➕ Adding 'Aangepast resultaat' column to template...")
+    print(" Adding 'Aangepast resultaat' column to template...")
     verw_col = find_col_by_header(ws, "Verwacht resultaat")
     if not verw_col:
         raise ValueError("Kon kolom 'Verwacht resultaat' niet vinden in template (rij 2).")

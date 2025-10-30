@@ -155,7 +155,7 @@ def main():
     if not files:
         raise FileNotFoundError("Geen centrale overzichten gevonden in Output.")
     path = max(files, key=lambda f: f.stat().st_mtime)
-    print(f"📄 Gekozen centraal bestand: {path.name}")
+    print(f" Gekozen centraal bestand: {path.name}")
 
     # 1) Lees het overzicht
     df = pd.read_excel(path, header=0, engine="openpyxl")
@@ -192,7 +192,7 @@ def main():
     before_count = df["Actiepunten Projectleider"].astype(str).str.count("•").sum()
     df["Actiepunten Projectleider"] = df.apply(_suppress_if_gesloten_so, axis=1)
     after_count = df["Actiepunten Projectleider"].astype(str).str.count("•").sum()
-    print(f"🧹 'Gesloten SO' onderdrukking toegepast: {int(before_count - after_count)} regels verwijderd")
+    print(f" 'Gesloten SO' onderdrukking toegepast: {int(before_count - after_count)} regels verwijderd")
 
     # 4) Schrijf terug naar Excel
     wb = load_workbook(path)
@@ -231,10 +231,10 @@ def main():
             else:
                 if cell.value not in (None, ""):
                     removed_count += 1
-                    print(f"❌ Oude conclusie verwijderd bij rij {idx}")
+                    print(f" Oude conclusie verwijderd bij rij {idx}")
                 cell.value = None
                 ws.row_dimensions[idx].height = None
-        print(f"✅ Projectleider: {updated_count} bijgewerkt, {removed_count} verwijderd")
+        print(f" Projectleider: {updated_count} bijgewerkt, {removed_count} verwijderd")
 
     # Update Bespreekpunten (automatic)
     if "Bespreekpunten" in col_letters:
@@ -254,10 +254,10 @@ def main():
             else:
                 if cell.value not in (None, ""):
                     removed_count += 1
-                    print(f"❌ Oude bespreekpunt verwijderd bij rij {idx}")
+                    print(f" Oude bespreekpunt verwijderd bij rij {idx}")
                 cell.value = None
                 ws.row_dimensions[idx].height = None
-        print(f"✅ Bespreekpunten: {updated_count} bijgewerkt, {removed_count} verwijderd")
+        print(f" Bespreekpunten: {updated_count} bijgewerkt, {removed_count} verwijderd")
 
     # Update Actiepunten Elders
     if "Actiepunten Elders" in col_letters:
@@ -277,10 +277,10 @@ def main():
             else:
                 if cell.value not in (None, ""):
                     removed_count += 1
-                    print(f"❌ Oude actiepunt (elders) verwijderd bij rij {idx}")
+                    print(f" Oude actiepunt (elders) verwijderd bij rij {idx}")
                 cell.value = None
                 ws.row_dimensions[idx].height = None
-        print(f"✅ Actiepunten Elders: {updated_count} bijgewerkt, {removed_count} verwijderd")
+        print(f" Actiepunten Elders: {updated_count} bijgewerkt, {removed_count} verwijderd")
 
     # Maak kolommen breder
     for col_name in ["Actiepunten Projectleider", "Bespreekpunten"]:
@@ -288,7 +288,7 @@ def main():
             ws.column_dimensions[col_letters[col_name]].width = 50
 
     wb.save(path)
-    print(f"✅ Conclusies bijgewerkt in bestand: {os.path.basename(path)}")
+    print(f" Conclusies bijgewerkt in bestand: {os.path.basename(path)}")
 
 if __name__ == "__main__":
     main()

@@ -53,11 +53,11 @@ def get_project_row_mapping(worksheet, start_row=2):
     return mapping
 
 def main():
-    print("🔄 Tool 1: Synchroniseer werkbestand → centraal bestand")
+    print(" Tool 1: Synchroniseer werkbestand centraal bestand")
 
     try:
         # 1. Laad werkbestand
-        print("📂 Zoek nieuwste werkbestand...")
+        print(" Zoek nieuwste werkbestand...")
         workfile_path = find_latest_file(OUTPUT_FOLDER, "Werkbestand_AlleProjecten")
         print(f"   Gevonden: {os.path.basename(workfile_path)}")
 
@@ -90,7 +90,7 @@ def main():
         work_project_to_row = get_project_row_mapping(ws_work, start_row=2)
 
         # 2. Laad overzichtbestand
-        print("📂 Zoek nieuwste overzichtbestand...")
+        print(" Zoek nieuwste overzichtbestand...")
         overview_path = find_latest_file(OUTPUT_FOLDER, "Overzicht_Projectadministratie_Week")
         print(f"   Gevonden: {os.path.basename(overview_path)}")
 
@@ -105,7 +105,7 @@ def main():
                 col_map[cell.value.strip()] = get_column_letter(cell.column)
 
         if EXTRA_STATUS_COL not in [c.value for c in header_row if c.value]:
-            print(f"➕ Voeg statuskolom toe: {EXTRA_STATUS_COL}")
+            print(f" Voeg statuskolom toe: {EXTRA_STATUS_COL}")
             ws.cell(row=1, column=ws.max_column+1, value=EXTRA_STATUS_COL)
             col_map[EXTRA_STATUS_COL] = get_column_letter(ws.max_column)
         else:
@@ -130,7 +130,7 @@ def main():
         updates = 0
         manual_detected = 0
 
-        print("🔄 Synchroniseer data...")
+        print(" Synchroniseer data...")
         for row_idx in range(2, ws.max_row + 1):
             projectnummer = ws[f"A{row_idx}"].value
             if projectnummer:
@@ -154,7 +154,7 @@ def main():
                                     if pd.notna(manual_override) and str(manual_override).strip() != "":
                                         final_value = manual_override
                                         is_manual = True
-                                        print(f"   ✋ HANDMATIG: {projectnummer} = €{final_value}")
+                                        print(f"    HANDMATIG: {projectnummer} = €{final_value}")
 
                                 if pd.notna(final_value) and str(final_value).strip() != str(old_val).strip():
                                     ws[cell_ref].value = final_value
@@ -174,15 +174,15 @@ def main():
                                     ws[cell_ref].value = new_val
                                     updates += 1
 
-        print("💾 Sla overzichtbestand op...")
+        print(" Sla overzichtbestand op...")
         wb.save(overview_path)
 
-        print(f"✅ Synchronisatie voltooid!")
-        print(f"   🔄 Gewijzigde waarden: {updates}")
-        print(f"   🟠 Manual overrides: {manual_detected}")
+        print(f" Synchronisatie voltooid!")
+        print(f"    Gewijzigde waarden: {updates}")
+        print(f"    Manual overrides: {manual_detected}")
 
     except Exception as e:
-        print(f"❌ FOUT: {e}")
+        print(f" FOUT: {e}")
         raise
 
 if __name__ == "__main__":

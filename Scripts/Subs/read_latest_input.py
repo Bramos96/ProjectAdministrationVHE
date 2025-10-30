@@ -120,7 +120,7 @@ for fname in latest:  # hier worden de twee laatste bestanden in input gelezen e
     log.info(f"Mapping gebruikt voor bestandstype {typ}: {rename_dict}")
     log.info(f"Zoekt naar kolommen {list(rename_dict.keys())} in {fname}")
 
-    # 👉 Eerst renamen, dan filteren
+    #  Eerst renamen, dan filteren
     sub = df.rename(columns=rename_dict)
 
     # Neem alleen de kolommen die we in mapping hebben gebruikt (waarden, niet keys!)
@@ -131,7 +131,7 @@ for fname in latest:  # hier worden de twee laatste bestanden in input gelezen e
 
     # Check dat Projectnummer er nu in zit
     if "Projectnummer" not in sub.columns:
-        log.error(f"❌ Projectnummer ontbreekt nog steeds in {fname}!")
+        log.error(f" Projectnummer ontbreekt nog steeds in {fname}!")
         continue
 
     # Index instellen
@@ -139,7 +139,7 @@ for fname in latest:  # hier worden de twee laatste bestanden in input gelezen e
     sub.index = sub.index.map(normalize_idx)
     sub.index.name = "Projectnummer"
 
-    # ✅ Zet de 3 SC-vlaggen op basis van tellerkolommen (>0 ⇒ 'Ja', anders 'Nee')
+    #  Zet de 3 SC-vlaggen op basis van tellerkolommen (>0 ⇒ 'Ja', anders 'Nee')
     if typ == "Overzicht Te Sluiten":
         src = df.copy()
         # sleutel gelijk trekken
@@ -215,7 +215,7 @@ if "Verwacht resultaat" not in df_input.columns:
 if FLAG_COL not in df_input.columns:
     df_input[FLAG_COL] = False
 
-# 🔑 Zorg dat sleutelkolommen altijd correct zijn
+#  Zorg dat sleutelkolommen altijd correct zijn
 # Projectnummer kan in bronnen "Project" heten
 if "Project" in df_input.columns and "Projectnummer" not in df_input.columns:
     df_input.rename(columns={"Project": "Projectnummer"}, inplace=True)
