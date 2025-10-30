@@ -203,6 +203,98 @@ cols_keep_for_output = [
 to_close_df = to_close_df[[c for c in cols_keep_for_output if c in to_close_df.columns]].copy()
 # ── END BUILD LIST ──
 
+# ── BUILD LIST OF ISSUE PROJECTS ("Probleemprojecten" / Sheet3) ──
+ISSUE_COLS = [
+    "Projectnummer",
+    "Projectleider",
+    "Klant",
+    "Omschrijving",
+    "Actiepunten Bram",
+    "Actiepunten Elders",
+    "Bespreekpunten",
+]
+
+issue_view_df = df[[c for c in ISSUE_COLS if c in df.columns]].copy()
+
+_CLOSE_PATTERNS = ["sluit", "afsluit", "afhandel", "afhand"]
+
+def clean_multiline(raw_val):
+    """
+    Maak nette tekst:
+    - None / NaN -> ""
+    - vervang ; door newline
+    - verwijder lege bullets
+    """
+    if not isinstance(raw_val, str):
+        return ""
+    parts = [p.strip() for p in raw_val.replace(";", "\n").split("\n")]
+    parts = [p for p in parts if p]  # gooi lege regels weg
+    return "\n".join(parts)
+
+def extract_bram_action(raw_txt):
+    """
+    Geeft TERUG de echte openstaande actie voor Bram.
+    - Leeg / NaN / placeholders -> ""
+    - Alles wat klinkt als 'sluiten/afhandelen' -> ""
+    - Anders -> opgeschoonde tekst (multiline netjes)
+    """
+
+    # 0. None of echte NaN?
+    if raw_txt is None:
+        return ""
+
+    txt = str(raw_txt).strip()
+
+    # 1. Als het veld feitelijk geen inhoud heeft (placeholders), skip
+    #    Denk aan: "-", "nan", "NaN", "None", "nvt", "n/a", etc.
+    placeholder_candidates = {
+        "", "-", "nan", "none", "n.v.t.", "nvt", "n/a", "n\\a", "geen", " "  # ruimte only
+    }
+    if txt.lower() in placeholder_candidates:
+        return ""
+
+    lower_txt = txt.lower()
+
+    # 2. Als het eigenlijk een afrond/afsluit boodschap is -> dit hoort in Sheet2, niet Sheet3
+    if any(p in lower_txt for p in _CLOSE_PATTERNS):
+        return ""
+
+    # 3. Dit is dus wél een actie: maak hem netjes leesbaar
+    return clean_multiline(txt)
+
+
+# 1. Schoon en filter 'Actiepunten Bram'
+if "Actiepunten Bram" in issue_view_df.columns:
+    issue_view_df["Actiepunten Bram"] = issue_view_df["Actiepunten Bram"].apply(extract_bram_action)
+else:
+    issue_view_df["Actiepunten Bram"] = ""
+
+# 2. Hou alleen rijen waar Bram NA schoonmaken nog echt iets heeft staan
+mask_need_bram = issue_view_df["Actiepunten Bram"].astype(str).str.strip() != ""
+issue_view_df = issue_view_df[mask_need_bram].copy()
+
+# 3. Schoon de overige tekstkolommen (geen NaN meer, bullets netjes)
+for colname in ["Omschrijving", "Actiepunten Elders", "Bespreekpunten"]:
+    if colname in issue_view_df.columns:
+        issue_view_df[colname] = issue_view_df[colname].apply(clean_multiline)
+
+# 4. Kies kolommen voor Sheet3
+issue_cols_keep_for_output = [
+    "Projectnummer",
+    "Projectleider",
+    "Klant",
+    "Omschrijving",
+    "Actiepunten Bram",
+    "Actiepunten Elders",
+    "Bespreekpunten",
+]
+
+to_issue_df = issue_view_df[[c for c in issue_cols_keep_for_output if c in issue_view_df.columns]].copy()
+
+# 5. Geen 'nan' letterlijk in Excel: alles wat nog NaN is wordt lege string
+to_issue_df = to_issue_df.fillna("")
+# ── END ISSUE LIST ──
+
 
 # (optioneel: korte log om te zien wat er in de vlag-kolom staat)
 if "Handmatig verwacht resultaat" in df.columns:
@@ -559,6 +651,64 @@ if SHEET2_NAME in wb.sheetnames:
     # 5. Freeze panes so header row stays visible when scrolling
     ws_close.freeze_panes = f"A{START_DATA_ROW}"
 # ── END SECOND SHEET FILL ──
+
+# ── FILL THIRD SHEET ("Sheet3") WITH to_issue_df ──
+SHEET3_NAME = "Sheet3"  # moet overeenkomen met de tabnaam in je template
+
+if SHEET3_NAME in wb.sheetnames:
+    ws_issue = wb[SHEET3_NAME]
+
+    # zelfde aannames als bij Sheet2:
+    # Row 1 = blauwe info-balk (laten staan)
+    # Row 2 = headers
+    # Row 3+ = data
+
+    HEADER_ROW_3 = 2
+    START_DATA_ROW_3 = 3
+
+    # 1. Kolomvolgorde bepalen op basis van de headers in rij 2
+    cols_issue = []
+    for cell in ws_issue[HEADER_ROW_3]:
+        header_val = cell.value
+        if not header_val:
+            continue
+        if header_val in to_issue_df.columns:
+            cols_issue.append(header_val)
+
+    # 2. Oude data leegmaken (waarden wissen, opmaak laten staan)
+    max_rows_3 = ws_issue.max_row
+    max_cols_3 = ws_issue.max_column
+    for r in range(START_DATA_ROW_3, max_rows_3 + 1):
+        for c in range(1, max_cols_3 + 1):
+            ws_issue.cell(row=r, column=c).value = None
+
+    # 3. Nieuwe data schrijven
+    out_row_3 = START_DATA_ROW_3
+    for _, row_vals in to_issue_df.iterrows():
+        for c_idx, col_name in enumerate(cols_issue, start=1):
+            val = row_vals[col_name] if col_name in to_issue_df.columns else ""
+            cell = ws_issue.cell(row=out_row_3, column=c_idx, value=val)
+            cell.alignment = Alignment(
+                horizontal="left",
+                vertical="top",
+                wrap_text=True
+            )
+        ws_issue.row_dimensions[out_row_3].height = 40
+        out_row_3 += 1
+
+    # 4. Autofilter (zoals bij Sheet2)
+    if cols_issue:
+        first_col_letter_3 = get_column_letter(1)
+        last_col_letter_3 = get_column_letter(len(cols_issue))
+        last_data_row_3 = out_row_3 - 1
+        ws_issue.auto_filter.ref = (
+            f"{first_col_letter_3}{HEADER_ROW_3}:{last_col_letter_3}{last_data_row_3}"
+        )
+
+    # 5. Freeze panes zodat headers vast staan
+    ws_issue.freeze_panes = f"A{START_DATA_ROW_3}"
+# ── END THIRD SHEET FILL ──
+
 
 
 # 15) Archive old workfiles, then save new one in Output root
