@@ -199,14 +199,43 @@ if all_inputs:
 else:
     df_input = pd.DataFrame(columns=input_cols + HANDMATE_COLUMNS)
 
-# Zet index terug naar kolom zodat 'Projectnummer' zichtbaar blijft
+# Zorg dat Projectnummer als gewone kolom bestaat
 if isinstance(df_input.index, pd.Index) and df_input.index.name == "Projectnummer":
     df_input = df_input.reset_index()
 
-# Bescherm handmatige kolommen: input mag ze niet overschrijven
-for col in HANDMATE_COLUMNS:
-    if col in df_input.columns:
-        df_input[col] = pd.NA
+# === NIEUW: consolideren per Projectnummer ===
+def pick_status(series: pd.Series):
+    # Prioriteit: "Ja" wint > "Nee" > leeg
+    s = series.dropna().astype(str).str.strip()
+    if (s == "Ja").any():
+        return "Ja"
+    if (s == "Nee").any():
+        return "Nee"
+    return pd.NA
+
+def pick_first_nonempty(series: pd.Series):
+    for v in series:
+        if pd.notna(v) and str(v).strip() != "":
+            return v
+    return pd.NA
+
+STATUS_COLS = ["Openstaande bestelling", "Openstaande SO", "Openstaande PO"]
+
+grouped_rows = []
+for projnummer, chunk in df_input.groupby("Projectnummer"):
+    row = {"Projectnummer": projnummer}
+    for col in df_input.columns:
+        if col == "Projectnummer":
+            continue
+        if col in STATUS_COLS:
+            row[col] = pick_status(chunk[col])
+        else:
+            row[col] = pick_first_nonempty(chunk[col])
+    grouped_rows.append(row)
+
+df_input = pd.DataFrame(grouped_rows)
+# === EINDE CONSOLIDATIE ===
+
 
 # Zorg dat 'Verwacht resultaat' en de flagkolom altijd bestaan
 if "Verwacht resultaat" not in df_input.columns:
@@ -298,20 +327,37 @@ if len(nieuwe_projecten) > 0:
     df_central = pd.concat([df_central, new_rows])
 
 # Stap 3: Update automatische kolommen (NIET handmatige)
+
 auto_cols = [c for c in df_input.columns if c not in HANDMATE_COLUMNS + ["Whitelist", FLAG_COL]]
 
+# Zorg dat df_central alle kolommen kent
 for c in auto_cols:
     if c not in df_central.columns:
         df_central[c] = pd.NA
+for c in HANDMATE_COLUMNS:
+    if c not in df_central.columns:
+        df_central[c] = pd.NA
 
+# 3a. Snapshot van alle handmatige kolommen zoals ze NU in df_central staan
+manual_snapshot = {}
+for col in HANDMATE_COLUMNS:
+    if col in df_central.columns:
+        manual_snapshot[col] = df_central[col].copy()
+
+# 3b. Update alleen de automatische kolommen
 present = [c for c in auto_cols if c in df_input.columns and c in df_central.columns]
 if present:
-    # Optioneel: consistente types voor de 3 SC-kolommen
+    # Consistente types voor de statuskolommen
     for c in ["Openstaande bestelling", "Openstaande SO", "Openstaande PO"]:
         if c in df_input.columns:
             df_input[c] = df_input[c].astype("string")
-    
+
     df_central.update(df_input[present], overwrite=True)
+
+# 3c. Handmatige kolommen terugzetten zoals ze waren
+for col, series in manual_snapshot.items():
+    df_central[col] = series
+
 
 log.info(f"Totaal projecten na sync: {len(df_central)}")
 # --- END: BEHOUD ALLEEN PROJECTEN UIT INPUT ---
@@ -422,6 +468,21 @@ for col in currency_cols:
 dt = pd.Timestamp.today()
 fn = f"Overzicht_Projectadministratie_Week{dt.week}_{dt.year}.xlsx"
 out_path = os.path.join(OUTPUT_FOLDER, fn)
+
+print("CHECK >>>")
+print("Openstaande PO value_counts:")
+print(df_central["Openstaande PO"].value_counts(dropna=False).head())
+print("Openstaande SO value_counts:")
+print(df_central["Openstaande SO"].value_counts(dropna=False).head())
+print("Openstaande bestelling value_counts:")
+print(df_central["Openstaande bestelling"].value_counts(dropna=False).head())
+
+print("\nVoorbeeld handmatige kolommen (niet leeg als het goed is):")
+cols_check = ["Algemene informatie","Actiepunten Bram","2e Projectleider"]
+cols_check = [c for c in cols_check if c in df_central.columns]
+print(df_central[cols_check].dropna(how="all").head(5))
+print("<<< END CHECK")
+
 
 with pd.ExcelWriter(out_path, engine="xlsxwriter") as writer:
     df_merged.to_excel(writer, index=False, sheet_name="Overzicht")

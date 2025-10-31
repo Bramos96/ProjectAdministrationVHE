@@ -1,0 +1,1150 @@
+2025-10-31 15:13:00,783 [INFO] \U0001f680 START SYNC PROCESS
+2025-10-31 15:13:00,783 [INFO]  Start script: workingfile_to_overview.py
+2025-10-31 15:13:02,972 [INFO]  Tool 1: Synchroniseer werkbestand centraal bestand
+ Zoek nieuwste werkbestand...
+   Gevonden: Werkbestand_AlleProjecten_2025-10-31.xlsx
+ Zoek nieuwste overzichtbestand...
+   Gevonden: Overzicht_Projectadministratie_Week44_2025.xlsx
+ Synchroniseer data...
+    HANDMATIG: 31151435 = €0.0
+    HANDMATIG: 31151472 = €0.0
+    HANDMATIG: 31151473 = €0.0
+    HANDMATIG: 31151475 = €0.0
+    HANDMATIG: 31151476 = €0.0
+    HANDMATIG: 31151477 = €0.0
+    HANDMATIG: 31151478 = €0.0
+    HANDMATIG: 31151479 = €0.0
+    HANDMATIG: 31151489 = €0.0
+    HANDMATIG: 31151597 = €0.0
+    HANDMATIG: 31133439 = €-180000.0
+    HANDMATIG: 31147984 = €0.0
+    HANDMATIG: 31150749 = €0.0
+    HANDMATIG: 31150833 = €0.0
+    HANDMATIG: 31151033 = €0.0
+    HANDMATIG: 31151148 = €0.0
+    HANDMATIG: 31151159 = €0.0
+    HANDMATIG: 31151169 = €0.0
+    HANDMATIG: 31151215 = €0.0
+    HANDMATIG: 31151228 = €0.0
+    HANDMATIG: 31151232 = €0.0
+    HANDMATIG: 31151237 = €0.0
+    HANDMATIG: 31151238 = €0.0
+    HANDMATIG: 31151239 = €0.0
+    HANDMATIG: 31151240 = €0.0
+    HANDMATIG: 31151241 = €0.0
+    HANDMATIG: 31151242 = €0.0
+    HANDMATIG: 31151243 = €0.0
+    HANDMATIG: 31151244 = €0.0
+    HANDMATIG: 31151247 = €0.0
+    HANDMATIG: 31151248 = €0.0
+    HANDMATIG: 31151249 = €0.0
+    HANDMATIG: 31151250 = €0.0
+    HANDMATIG: 31151251 = €0.0
+    HANDMATIG: 31151252 = €0.0
+    HANDMATIG: 31151253 = €0.0
+    HANDMATIG: 31151254 = €0.0
+    HANDMATIG: 31151255 = €0.0
+    HANDMATIG: 31151257 = €0.0
+    HANDMATIG: 31151260 = €0.0
+    HANDMATIG: 31151261 = €0.0
+    HANDMATIG: 31151262 = €0.0
+    HANDMATIG: 31151263 = €0.0
+    HANDMATIG: 31151264 = €0.0
+    HANDMATIG: 31151265 = €0.0
+    HANDMATIG: 31151266 = €0.0
+    HANDMATIG: 31151270 = €0.0
+    HANDMATIG: 31151271 = €0.0
+    HANDMATIG: 31151277 = €0.0
+    HANDMATIG: 31151281 = €0.0
+    HANDMATIG: 31151282 = €0.0
+    HANDMATIG: 31151283 = €0.0
+    HANDMATIG: 31151285 = €0.0
+    HANDMATIG: 31151286 = €0.0
+    HANDMATIG: 31151289 = €0.0
+    HANDMATIG: 31151290 = €0.0
+    HANDMATIG: 31151291 = €0.0
+    HANDMATIG: 31151292 = €0.0
+    HANDMATIG: 31151293 = €0.0
+    HANDMATIG: 31151294 = €0.0
+    HANDMATIG: 31151295 = €0.0
+    HANDMATIG: 31151296 = €0.0
+    HANDMATIG: 31151297 = €0.0
+    HANDMATIG: 31151298 = €0.0
+    HANDMATIG: 31151299 = €0.0
+    HANDMATIG: 31151301 = €0.0
+    HANDMATIG: 31151302 = €0.0
+    HANDMATIG: 31151303 = €0.0
+    HANDMATIG: 31151304 = €0.0
+    HANDMATIG: 31151305 = €0.0
+    HANDMATIG: 31151306 = €0.0
+    HANDMATIG: 31151307 = €0.0
+    HANDMATIG: 31151308 = €0.0
+    HANDMATIG: 31151309 = €0.0
+    HANDMATIG: 31151310 = €0.0
+    HANDMATIG: 31151311 = €0.0
+    HANDMATIG: 31151312 = €0.0
+    HANDMATIG: 31151313 = €0.0
+    HANDMATIG: 31151314 = €0.0
+    HANDMATIG: 31151315 = €0.0
+    HANDMATIG: 31151316 = €0.0
+    HANDMATIG: 31151317 = €0.0
+    HANDMATIG: 31151318 = €0.0
+    HANDMATIG: 31151319 = €0.0
+    HANDMATIG: 31151322 = €0.0
+    HANDMATIG: 31151325 = €0.0
+    HANDMATIG: 31151326 = €0.0
+    HANDMATIG: 31151327 = €0.0
+    HANDMATIG: 31151328 = €0.0
+    HANDMATIG: 31151329 = €0.0
+    HANDMATIG: 31151330 = €0.0
+    HANDMATIG: 31151331 = €0.0
+    HANDMATIG: 31151332 = €0.0
+    HANDMATIG: 31151333 = €0.0
+    HANDMATIG: 31151334 = €0.0
+    HANDMATIG: 31151335 = €0.0
+    HANDMATIG: 31151337 = €0.0
+    HANDMATIG: 31151339 = €0.0
+    HANDMATIG: 31151341 = €0.0
+    HANDMATIG: 31151342 = €0.0
+    HANDMATIG: 31151344 = €0.0
+    HANDMATIG: 31151347 = €0.0
+    HANDMATIG: 31151348 = €0.0
+    HANDMATIG: 31151349 = €0.0
+    HANDMATIG: 31151351 = €0.0
+    HANDMATIG: 31151352 = €0.0
+    HANDMATIG: 31151354 = €0.0
+    HANDMATIG: 31151355 = €0.0
+    HANDMATIG: 31151356 = €0.0
+    HANDMATIG: 31151357 = €0.0
+    HANDMATIG: 31151358 = €0.0
+    HANDMATIG: 31151359 = €0.0
+    HANDMATIG: 31151360 = €0.0
+    HANDMATIG: 31151361 = €0.0
+    HANDMATIG: 31151362 = €0.0
+    HANDMATIG: 31151363 = €0.0
+    HANDMATIG: 31151364 = €0.0
+    HANDMATIG: 31151365 = €0.0
+    HANDMATIG: 31151366 = €0.0
+    HANDMATIG: 31151367 = €0.0
+    HANDMATIG: 31151372 = €0.0
+    HANDMATIG: 31151373 = €0.0
+    HANDMATIG: 31151374 = €0.0
+    HANDMATIG: 31151375 = €0.0
+    HANDMATIG: 31151377 = €0.0
+    HANDMATIG: 31151378 = €0.0
+    HANDMATIG: 31151379 = €0.0
+    HANDMATIG: 31151380 = €0.0
+    HANDMATIG: 31151381 = €0.0
+    HANDMATIG: 31151382 = €0.0
+    HANDMATIG: 31151383 = €0.0
+    HANDMATIG: 31151384 = €0.0
+    HANDMATIG: 31151385 = €0.0
+    HANDMATIG: 31151386 = €0.0
+    HANDMATIG: 31151387 = €0.0
+    HANDMATIG: 31151388 = €0.0
+    HANDMATIG: 31151389 = €0.0
+    HANDMATIG: 31151390 = €0.0
+    HANDMATIG: 31151391 = €0.0
+    HANDMATIG: 31151392 = €0.0
+    HANDMATIG: 31151393 = €0.0
+    HANDMATIG: 31151394 = €0.0
+    HANDMATIG: 31151395 = €0.0
+    HANDMATIG: 31151396 = €0.0
+    HANDMATIG: 31151397 = €0.0
+    HANDMATIG: 31151398 = €0.0
+    HANDMATIG: 31151399 = €0.0
+    HANDMATIG: 31151400 = €0.0
+    HANDMATIG: 31151401 = €0.0
+    HANDMATIG: 31151402 = €0.0
+    HANDMATIG: 31151407 = €0.0
+    HANDMATIG: 31151410 = €0.0
+    HANDMATIG: 31151412 = €0.0
+    HANDMATIG: 31151413 = €0.0
+    HANDMATIG: 31151414 = €0.0
+    HANDMATIG: 31151417 = €0.0
+    HANDMATIG: 31151418 = €0.0
+    HANDMATIG: 31151419 = €0.0
+    HANDMATIG: 31151420 = €0.0
+    HANDMATIG: 31151421 = €0.0
+    HANDMATIG: 31151422 = €0.0
+    HANDMATIG: 31151423 = €0.0
+    HANDMATIG: 31151424 = €0.0
+    HANDMATIG: 31151425 = €0.0
+    HANDMATIG: 31151426 = €0.0
+    HANDMATIG: 31151427 = €0.0
+    HANDMATIG: 31151428 = €0.0
+    HANDMATIG: 31151429 = €0.0
+    HANDMATIG: 31151430 = €0.0
+    HANDMATIG: 31151431 = €0.0
+    HANDMATIG: 31151434 = €0.0
+    HANDMATIG: 31151436 = €0.0
+    HANDMATIG: 31151439 = €0.0
+    HANDMATIG: 31151440 = €0.0
+    HANDMATIG: 31151441 = €0.0
+    HANDMATIG: 31151444 = €0.0
+    HANDMATIG: 31151445 = €0.0
+    HANDMATIG: 31151448 = €0.0
+    HANDMATIG: 31151449 = €0.0
+    HANDMATIG: 31151451 = €0.0
+    HANDMATIG: 31151454 = €0.0
+    HANDMATIG: 31151455 = €0.0
+    HANDMATIG: 31151456 = €0.0
+    HANDMATIG: 31151457 = €0.0
+    HANDMATIG: 31151458 = €0.0
+    HANDMATIG: 31151459 = €0.0
+    HANDMATIG: 31151460 = €0.0
+    HANDMATIG: 31151461 = €0.0
+    HANDMATIG: 31151462 = €0.0
+    HANDMATIG: 31151463 = €0.0
+    HANDMATIG: 31151464 = €0.0
+    HANDMATIG: 31151465 = €0.0
+    HANDMATIG: 31151466 = €0.0
+    HANDMATIG: 31151467 = €0.0
+    HANDMATIG: 31151468 = €0.0
+    HANDMATIG: 31151470 = €0.0
+    HANDMATIG: 31151474 = €0.0
+    HANDMATIG: 31151480 = €0.0
+    HANDMATIG: 31151481 = €0.0
+    HANDMATIG: 31151484 = €0.0
+    HANDMATIG: 31151488 = €0.0
+    HANDMATIG: 31151492 = €0.0
+    HANDMATIG: 31151493 = €0.0
+    HANDMATIG: 31151494 = €0.0
+    HANDMATIG: 31151495 = €0.0
+    HANDMATIG: 31151497 = €0.0
+    HANDMATIG: 31151499 = €0.0
+    HANDMATIG: 31151504 = €0.0
+    HANDMATIG: 31151505 = €0.0
+    HANDMATIG: 31151506 = €0.0
+    HANDMATIG: 31151507 = €0.0
+    HANDMATIG: 31151511 = €0.0
+    HANDMATIG: 31151514 = €0.0
+    HANDMATIG: 31151519 = €0.0
+    HANDMATIG: 31151520 = €0.0
+    HANDMATIG: 31151521 = €0.0
+    HANDMATIG: 31151522 = €0.0
+    HANDMATIG: 31151523 = €0.0
+    HANDMATIG: 31151524 = €0.0
+    HANDMATIG: 31151525 = €0.0
+    HANDMATIG: 31151526 = €0.0
+    HANDMATIG: 31151527 = €0.0
+    HANDMATIG: 31151528 = €0.0
+    HANDMATIG: 31151529 = €0.0
+    HANDMATIG: 31151530 = €0.0
+    HANDMATIG: 31151531 = €0.0
+    HANDMATIG: 31151532 = €0.0
+    HANDMATIG: 31151533 = €0.0
+    HANDMATIG: 31151538 = €0.0
+    HANDMATIG: 31151539 = €0.0
+    HANDMATIG: 31151540 = €0.0
+    HANDMATIG: 31151542 = €0.0
+    HANDMATIG: 31151545 = €0.0
+    HANDMATIG: 31151547 = €0.0
+    HANDMATIG: 31151548 = €0.0
+    HANDMATIG: 31151550 = €0.0
+    HANDMATIG: 31151551 = €0.0
+    HANDMATIG: 31151552 = €0.0
+    HANDMATIG: 31151553 = €0.0
+    HANDMATIG: 31151556 = €0.0
+    HANDMATIG: 31151558 = €0.0
+    HANDMATIG: 31151560 = €0.0
+    HANDMATIG: 31151561 = €0.0
+    HANDMATIG: 31151562 = €0.0
+    HANDMATIG: 31151563 = €0.0
+    HANDMATIG: 31151564 = €0.0
+    HANDMATIG: 31151574 = €0.0
+    HANDMATIG: 31151575 = €0.0
+    HANDMATIG: 31151576 = €0.0
+    HANDMATIG: 31151577 = €0.0
+    HANDMATIG: 31151578 = €0.0
+    HANDMATIG: 31151579 = €0.0
+    HANDMATIG: 31151580 = €0.0
+    HANDMATIG: 31151581 = €0.0
+    HANDMATIG: 31151582 = €0.0
+    HANDMATIG: 31151583 = €0.0
+    HANDMATIG: 31151584 = €0.0
+    HANDMATIG: 31151588 = €0.0
+    HANDMATIG: 31151590 = €0.0
+    HANDMATIG: 31151592 = €0.0
+    HANDMATIG: 31151593 = €0.0
+    HANDMATIG: 31151594 = €0.0
+    HANDMATIG: 31151595 = €0.0
+    HANDMATIG: 31151598 = €0.0
+    HANDMATIG: 31151599 = €0.0
+    HANDMATIG: 31151600 = €0.0
+    HANDMATIG: 31151601 = €0.0
+    HANDMATIG: 31151602 = €0.0
+    HANDMATIG: 31151604 = €0.0
+    HANDMATIG: 31151605 = €0.0
+    HANDMATIG: 31151606 = €0.0
+    HANDMATIG: 31151607 = €0.0
+    HANDMATIG: 31151608 = €0.0
+    HANDMATIG: 31151609 = €0.0
+    HANDMATIG: 31151610 = €0.0
+    HANDMATIG: 31151611 = €0.0
+    HANDMATIG: 31151612 = €0.0
+    HANDMATIG: 31151613 = €0.0
+    HANDMATIG: 31151614 = €0.0
+    HANDMATIG: 31151615 = €0.0
+    HANDMATIG: 31151616 = €0.0
+    HANDMATIG: 31151617 = €0.0
+    HANDMATIG: 31151619 = €0.0
+    HANDMATIG: 31151626 = €0.0
+    HANDMATIG: 31151627 = €0.0
+    HANDMATIG: 31151628 = €0.0
+    HANDMATIG: 31151629 = €0.0
+    HANDMATIG: 31151630 = €0.0
+    HANDMATIG: 31151631 = €0.0
+    HANDMATIG: 31151633 = €0.0
+    HANDMATIG: 31151634 = €0.0
+    HANDMATIG: 31151635 = €0.0
+    HANDMATIG: 31151636 = €0.0
+    HANDMATIG: 31151637 = €0.0
+    HANDMATIG: 31151638 = €0.0
+    HANDMATIG: 31151639 = €0.0
+    HANDMATIG: 31151642 = €0.0
+    HANDMATIG: 31151643 = €0.0
+    HANDMATIG: 31151644 = €0.0
+    HANDMATIG: 31151645 = €0.0
+    HANDMATIG: 31151648 = €0.0
+    HANDMATIG: 31151649 = €0.0
+    HANDMATIG: 31151652 = €0.0
+    HANDMATIG: 31151653 = €0.0
+    HANDMATIG: 31151654 = €0.0
+    HANDMATIG: 31151655 = €0.0
+    HANDMATIG: 31151659 = €0.0
+    HANDMATIG: 31151660 = €0.0
+    HANDMATIG: 31151663 = €0.0
+    HANDMATIG: 31151664 = €0.0
+    HANDMATIG: 31151667 = €0.0
+    HANDMATIG: 31151668 = €0.0
+    HANDMATIG: 31151671 = €0.0
+    HANDMATIG: 31151672 = €0.0
+    HANDMATIG: 31151673 = €0.0
+    HANDMATIG: 31151674 = €0.0
+    HANDMATIG: 31151675 = €0.0
+    HANDMATIG: 31151676 = €0.0
+    HANDMATIG: 31151677 = €0.0
+    HANDMATIG: 31151678 = €0.0
+    HANDMATIG: 31151679 = €0.0
+    HANDMATIG: 31151680 = €0.0
+    HANDMATIG: 31151681 = €0.0
+    HANDMATIG: 31151682 = €0.0
+    HANDMATIG: 31151683 = €0.0
+    HANDMATIG: 31151684 = €0.0
+    HANDMATIG: 31151685 = €0.0
+    HANDMATIG: 31151686 = €0.0
+    HANDMATIG: 31151687 = €0.0
+    HANDMATIG: 31151688 = €0.0
+    HANDMATIG: 31151689 = €0.0
+    HANDMATIG: 31151690 = €0.0
+    HANDMATIG: 31151691 = €0.0
+    HANDMATIG: 31151692 = €0.0
+    HANDMATIG: 31151693 = €0.0
+    HANDMATIG: 31151694 = €0.0
+    HANDMATIG: 31151695 = €0.0
+    HANDMATIG: 31151696 = €0.0
+    HANDMATIG: 31151697 = €0.0
+    HANDMATIG: 31151698 = €0.0
+    HANDMATIG: 31151699 = €0.0
+    HANDMATIG: 31151700 = €0.0
+    HANDMATIG: 31151701 = €0.0
+    HANDMATIG: 31151702 = €0.0
+    HANDMATIG: 31151703 = €0.0
+    HANDMATIG: 31151704 = €0.0
+    HANDMATIG: 31151705 = €0.0
+    HANDMATIG: 31151706 = €0.0
+    HANDMATIG: 31151707 = €0.0
+    HANDMATIG: 31151708 = €0.0
+    HANDMATIG: 31151709 = €0.0
+    HANDMATIG: 31151710 = €0.0
+    HANDMATIG: 31151711 = €0.0
+    HANDMATIG: 31151712 = €0.0
+    HANDMATIG: 31151713 = €0.0
+    HANDMATIG: 31151714 = €0.0
+    HANDMATIG: 31151715 = €0.0
+    HANDMATIG: 31151716 = €0.0
+    HANDMATIG: 31151717 = €0.0
+    HANDMATIG: 31151718 = €0.0
+    HANDMATIG: 31151719 = €0.0
+    HANDMATIG: 31151720 = €0.0
+    HANDMATIG: 31151721 = €0.0
+    HANDMATIG: PR1100071846.001 = €0.0
+    HANDMATIG: PR1100081311 = €0.0
+    HANDMATIG: PR1100082090 = €0.0
+    HANDMATIG: PR1100084188 = €0.0
+    HANDMATIG: PR1100084718 = €0.0
+    HANDMATIG: PR1100084859 = €0.0
+    HANDMATIG: PR1100085465 = €0.0
+    HANDMATIG: 31149908 = €0.0
+    HANDMATIG: 31151549 = €0.0
+    HANDMATIG: 31151651 = €0.0
+    HANDMATIG: 31151722 = €0.0
+    HANDMATIG: 31151723 = €0.0
+    HANDMATIG: 31151724 = €0.0
+    HANDMATIG: 31151725 = €0.0
+    HANDMATIG: 31151726 = €0.0
+    HANDMATIG: 31151727 = €0.0
+    HANDMATIG: 31151728 = €0.0
+    HANDMATIG: 31151729 = €0.0
+    HANDMATIG: 31151730 = €0.0
+    HANDMATIG: 31151731 = €0.0
+    HANDMATIG: 31151732 = €0.0
+    HANDMATIG: 31151733 = €0.0
+    HANDMATIG: 31151734 = €0.0
+    HANDMATIG: 31151735 = €0.0
+    HANDMATIG: 31151736 = €0.0
+    HANDMATIG: 31151737 = €0.0
+    HANDMATIG: 31151738 = €0.0
+    HANDMATIG: 31151739 = €0.0
+    HANDMATIG: 31151740 = €0.0
+    HANDMATIG: 31151742 = €0.0
+    HANDMATIG: 31151743 = €0.0
+    HANDMATIG: 31151744 = €0.0
+    HANDMATIG: 31151745 = €0.0
+    HANDMATIG: 31151747 = €0.0
+    HANDMATIG: 31151749 = €0.0
+    HANDMATIG: 31151750 = €0.0
+    HANDMATIG: 31151751 = €0.0
+    HANDMATIG: 31151752 = €0.0
+    HANDMATIG: 31151753 = €0.0
+    HANDMATIG: 31151754 = €0.0
+    HANDMATIG: 31151755 = €0.0
+    HANDMATIG: 31151756 = €0.0
+    HANDMATIG: 31151757 = €0.0
+    HANDMATIG: 31151758 = €0.0
+    HANDMATIG: 31151759 = €0.0
+    HANDMATIG: 31151760 = €0.0
+    HANDMATIG: 31151761 = €0.0
+    HANDMATIG: 31151762 = €0.0
+    HANDMATIG: 31151763 = €0.0
+    HANDMATIG: 31151764 = €0.0
+    HANDMATIG: 31151765 = €0.0
+    HANDMATIG: 31151766 = €0.0
+    HANDMATIG: 31151767 = €0.0
+    HANDMATIG: 31151768 = €0.0
+    HANDMATIG: 31151769 = €0.0
+    HANDMATIG: 31151770 = €0.0
+    HANDMATIG: 31151771 = €0.0
+    HANDMATIG: 31151772 = €0.0
+    HANDMATIG: 31151773 = €0.0
+    HANDMATIG: 31151774 = €0.0
+    HANDMATIG: 31151775 = €0.0
+    HANDMATIG: 31151777 = €0.0
+    HANDMATIG: 31151778 = €0.0
+    HANDMATIG: 31151779 = €0.0
+    HANDMATIG: 31151780 = €0.0
+    HANDMATIG: 31151781 = €0.0
+    HANDMATIG: 31151782 = €0.0
+    HANDMATIG: 31151783 = €0.0
+    HANDMATIG: 31151787 = €0.0
+    HANDMATIG: 31151788 = €0.0
+    HANDMATIG: 31151789 = €0.0
+    HANDMATIG: 31151512 = €0.0
+    HANDMATIG: 31151650 = €0.0
+    HANDMATIG: 31151790 = €0.0
+    HANDMATIG: 31151792 = €0.0
+    HANDMATIG: 31151793 = €0.0
+    HANDMATIG: 31151796 = €0.0
+    HANDMATIG: 31151797 = €0.0
+    HANDMATIG: 31151798 = €0.0
+    HANDMATIG: 31151799 = €0.0
+    HANDMATIG: 31151800 = €0.0
+    HANDMATIG: 31151801 = €0.0
+    HANDMATIG: 31151802 = €0.0
+    HANDMATIG: 31151803 = €0.0
+    HANDMATIG: 31151804 = €0.0
+    HANDMATIG: 31138213 = €0.0
+    HANDMATIG: 31146743 = €0.0
+    HANDMATIG: 31146744 = €0.0
+    HANDMATIG: 31147445 = €0.0
+    HANDMATIG: 31147994 = €0.0
+    HANDMATIG: 31149195 = €0.0
+    HANDMATIG: 31149220 = €0.0
+    HANDMATIG: 31149522 = €0.0
+    HANDMATIG: 31149714 = €0.0
+    HANDMATIG: 31149795 = €0.0
+    HANDMATIG: 31149858 = €0.0
+    HANDMATIG: 31149860 = €0.0
+    HANDMATIG: 31149861 = €0.0
+    HANDMATIG: 31149915 = €0.0
+    HANDMATIG: 31149916 = €0.0
+    HANDMATIG: 31149972 = €0.0
+    HANDMATIG: 31150134 = €0.0
+    HANDMATIG: 31150135 = €0.0
+    HANDMATIG: 31150137 = €0.0
+    HANDMATIG: 31150139 = €0.0
+    HANDMATIG: 31150141 = €0.0
+    HANDMATIG: 31150219 = €0.0
+    HANDMATIG: 31150220 = €0.0
+    HANDMATIG: 31150239 = €0.0
+    HANDMATIG: 31150314 = €0.0
+    HANDMATIG: 31150316 = €0.0
+    HANDMATIG: 31150339 = €0.0
+    HANDMATIG: 31150362 = €0.0
+    HANDMATIG: 31150363 = €0.0
+    HANDMATIG: 31150364 = €0.0
+    HANDMATIG: 31150439 = €0.0
+    HANDMATIG: 31150547 = €0.0
+    HANDMATIG: 31150560 = €0.0
+    HANDMATIG: 31150561 = €0.0
+    HANDMATIG: 31150605 = €0.0
+    HANDMATIG: 31150607 = €0.0
+    HANDMATIG: 31150608 = €0.0
+    HANDMATIG: 31150633 = €0.0
+    HANDMATIG: 31150667 = €0.0
+    HANDMATIG: 31150691 = €0.0
+    HANDMATIG: 31150774 = €0.0
+    HANDMATIG: 31150775 = €0.0
+    HANDMATIG: 31150778 = €0.0
+    HANDMATIG: 31150822 = €0.0
+    HANDMATIG: 31150823 = €0.0
+    HANDMATIG: 31150824 = €0.0
+    HANDMATIG: 31150825 = €0.0
+    HANDMATIG: 31150826 = €0.0
+    HANDMATIG: 31150831 = €0.0
+    HANDMATIG: 31150989 = €0.0
+    HANDMATIG: 31150990 = €0.0
+    HANDMATIG: 31151043 = €0.0
+    HANDMATIG: 31151044 = €0.0
+    HANDMATIG: 31151082 = €0.0
+    HANDMATIG: 31151085 = €0.0
+    HANDMATIG: 31151103 = €0.0
+    HANDMATIG: 31151433 = €0.0
+    HANDMATIG: 31151437 = €0.0
+    HANDMATIG: 31151438 = €0.0
+    HANDMATIG: 31151482 = €0.0
+    HANDMATIG: 31151559 = €0.0
+    HANDMATIG: 31151618 = €0.0
+    HANDMATIG: 31151661 = €0.0
+    HANDMATIG: 31151669 = €0.0
+    HANDMATIG: 31151776 = €0.0
+    HANDMATIG: 31151794 = €0.0
+    HANDMATIG: 31151805 = €0.0
+    HANDMATIG: 31151806 = €0.0
+    HANDMATIG: 31151807 = €0.0
+    HANDMATIG: 31151808 = €0.0
+    HANDMATIG: 31151810 = €0.0
+    HANDMATIG: 31151811 = €0.0
+    HANDMATIG: 31151812 = €0.0
+    HANDMATIG: 31151813 = €0.0
+    HANDMATIG: 31151814 = €0.0
+    HANDMATIG: 31151815 = €0.0
+    HANDMATIG: 31151816 = €0.0
+    HANDMATIG: 31151817 = €0.0
+    HANDMATIG: 31151818 = €0.0
+    HANDMATIG: 31151819 = €0.0
+    HANDMATIG: 31151820 = €0.0
+    HANDMATIG: 31151821 = €0.0
+    HANDMATIG: 31151822 = €0.0
+    HANDMATIG: 31151823 = €0.0
+    HANDMATIG: 31151824 = €0.0
+    HANDMATIG: 31151825 = €0.0
+    HANDMATIG: 31151826 = €0.0
+    HANDMATIG: 31151827 = €0.0
+    HANDMATIG: 31151828 = €0.0
+    HANDMATIG: 31151829 = €0.0
+    HANDMATIG: 31151830 = €0.0
+    HANDMATIG: 31151831 = €0.0
+    HANDMATIG: 31151832 = €0.0
+    HANDMATIG: 31151833 = €0.0
+    HANDMATIG: 31151834 = €0.0
+    HANDMATIG: 31151835 = €0.0
+    HANDMATIG: 31151836 = €0.0
+    HANDMATIG: 31151837 = €0.0
+    HANDMATIG: 31151838 = €0.0
+    HANDMATIG: 31151841 = €0.0
+    HANDMATIG: 31151842 = €0.0
+    HANDMATIG: 31151843 = €0.0
+    HANDMATIG: 31151844 = €0.0
+    HANDMATIG: 31151845 = €0.0
+    HANDMATIG: 31151846 = €0.0
+    HANDMATIG: 31151847 = €0.0
+    HANDMATIG: 31151848 = €0.0
+    HANDMATIG: 31151849 = €0.0
+    HANDMATIG: 31151850 = €0.0
+    HANDMATIG: 31151851 = €0.0
+    HANDMATIG: 31151852 = €0.0
+    HANDMATIG: 31151853 = €0.0
+    HANDMATIG: 31151854 = €0.0
+    HANDMATIG: 31151855 = €0.0
+    HANDMATIG: 31151856 = €0.0
+    HANDMATIG: 31151857 = €0.0
+    HANDMATIG: 31151858 = €0.0
+    HANDMATIG: 31151859 = €0.0
+    HANDMATIG: 31151860 = €0.0
+    HANDMATIG: 31151862 = €0.0
+    HANDMATIG: 31151863 = €0.0
+    HANDMATIG: 31151864 = €0.0
+    HANDMATIG: 31151865 = €0.0
+    HANDMATIG: 31151866 = €0.0
+    HANDMATIG: 31151867 = €0.0
+    HANDMATIG: 31151868 = €0.0
+    HANDMATIG: 31151869 = €0.0
+    HANDMATIG: 31151870 = €0.0
+    HANDMATIG: 31151871 = €0.0
+    HANDMATIG: 31151872 = €0.0
+    HANDMATIG: 31151873 = €0.0
+    HANDMATIG: 31151874 = €0.0
+    HANDMATIG: 31151876 = €0.0
+    HANDMATIG: 31151877 = €0.0
+    HANDMATIG: 31151878 = €0.0
+    HANDMATIG: 31151880 = €0.0
+    HANDMATIG: 31151881 = €0.0
+    HANDMATIG: 31151882 = €0.0
+    HANDMATIG: 31151883 = €0.0
+    HANDMATIG: 31151884 = €0.0
+    HANDMATIG: 31151885 = €0.0
+    HANDMATIG: 31151886 = €0.0
+    HANDMATIG: 31151887 = €0.0
+    HANDMATIG: 31151888 = €0.0
+    HANDMATIG: 31151889 = €0.0
+    HANDMATIG: 31151890 = €0.0
+    HANDMATIG: 31151891 = €0.0
+    HANDMATIG: 31151892 = €0.0
+    HANDMATIG: 31151893 = €0.0
+    HANDMATIG: 31151894 = €0.0
+    HANDMATIG: 31151895 = €0.0
+    HANDMATIG: 31151896 = €0.0
+    HANDMATIG: 31151897 = €0.0
+    HANDMATIG: 31151898 = €0.0
+    HANDMATIG: 31151899 = €0.0
+    HANDMATIG: 31151900 = €0.0
+    HANDMATIG: 31151901 = €0.0
+    HANDMATIG: 31151902 = €0.0
+    HANDMATIG: 31151903 = €0.0
+    HANDMATIG: 31151904 = €0.0
+    HANDMATIG: 31151905 = €0.0
+    HANDMATIG: 31151906 = €0.0
+    HANDMATIG: 31151907 = €0.0
+    HANDMATIG: 31151911 = €0.0
+    HANDMATIG: 31151912 = €0.0
+    HANDMATIG: 31151914 = €0.0
+    HANDMATIG: 31151915 = €0.0
+    HANDMATIG: 31151916 = €0.0
+    HANDMATIG: 31151917 = €0.0
+    HANDMATIG: 31151918 = €0.0
+    HANDMATIG: 31151919 = €0.0
+    HANDMATIG: 31151920 = €0.0
+    HANDMATIG: 31151921 = €0.0
+    HANDMATIG: 31151922 = €0.0
+    HANDMATIG: 31151923 = €0.0
+    HANDMATIG: 31151924 = €0.0
+    HANDMATIG: 31151925 = €0.0
+    HANDMATIG: 31151927 = €0.0
+    HANDMATIG: 31151928 = €0.0
+    HANDMATIG: 31151929 = €0.0
+    HANDMATIG: 31151930 = €0.0
+    HANDMATIG: 31151931 = €0.0
+    HANDMATIG: 31151932 = €0.0
+    HANDMATIG: 31151933 = €0.0
+    HANDMATIG: 31151934 = €0.0
+    HANDMATIG: 31151935 = €0.0
+    HANDMATIG: 31151939 = €0.0
+    HANDMATIG: PR1100076624 = €0.0
+    HANDMATIG: PR1100076625 = €0.0
+    HANDMATIG: PR1100076931 = €0.0
+    HANDMATIG: PR1100077286 = €0.0
+    HANDMATIG: PR1100077659 = €0.0
+    HANDMATIG: PR1100077664 = €0.0
+    HANDMATIG: PR1100078272 = €0.0
+    HANDMATIG: PR1100080950 = €0.0
+    HANDMATIG: PR1100081894 = €0.0
+    HANDMATIG: PR1100082068 = €0.0
+    HANDMATIG: PR1100082069 = €0.0
+    HANDMATIG: PR1100082163 = €0.0
+    HANDMATIG: PR1100084180.001 = €0.0
+    HANDMATIG: PR1100084180.002 = €0.0
+    HANDMATIG: PR1100084242 = €0.0
+    HANDMATIG: PR1100085455 = €0.0
+    HANDMATIG: RETOUREN 2025 VLD = €0.0
+    HANDMATIG: nan = €0.0
+ Sla overzichtbestand op...
+ Synchronisatie voltooid!
+    Gewijzigde waarden: 2218
+    Manual overrides: 653
+
+2025-10-31 15:13:02,974 [INFO] \u2705 Script workingfile_to_overview.py succesvol afgerond.
+2025-10-31 15:13:02,974 [INFO]  Start script: read_latest_input.py
+2025-10-31 15:13:08,400 [INFO] CHECK >>>
+Openstaande PO value_counts:
+Openstaande PO
+NaN    1659
+Nee     421
+Ja      138
+Name: count, dtype: int64
+Openstaande SO value_counts:
+Openstaande SO
+NaN    1659
+Nee     557
+Ja        2
+Name: count, dtype: int64
+Openstaande bestelling value_counts:
+Openstaande bestelling
+NaN    1659
+Nee     547
+Ja       12
+Name: count, dtype: int64
+
+Voorbeeld handmatige kolommen (niet leeg als het goed is):
+                                             Algemene informatie  ... 2e Projectleider
+Projectnummer                                                     ...                 
+31150376                                    Algemeen uren potje   ...              NaN
+31147576       Bestelling staat idd open omdat er iets kapot ...  ...              NaN
+31149646                      Wordt nog meerwerk op gefactureerd  ...              NaN
+31151000                             Budget wordt nog toegevoegd  ...              NaN
+31151001                             Budget wordt nog toegevoegd  ...              NaN
+
+[5 rows x 3 columns]
+<<< END CHECK
+Klaar, opgeslagen als: Overzicht_Projectadministratie_Week44_2025.xlsx
+
+2025-10-31 15:13:08,400 [INFO] \u2705 Script read_latest_input.py succesvol afgerond.
+2025-10-31 15:13:08,400 [INFO]  Start script: calculate_conclusions.py
+2025-10-31 15:13:11,466 [INFO]  Gekozen centraal bestand: Overzicht_Projectadministratie_Week44_2025.xlsx
+ 'Gesloten SO' onderdrukking toegepast: 979 regels verwijderd
+ Oude conclusie verwijderd bij rij 12
+ Oude conclusie verwijderd bij rij 47
+ Oude conclusie verwijderd bij rij 48
+ Oude conclusie verwijderd bij rij 60
+ Oude conclusie verwijderd bij rij 63
+ Oude conclusie verwijderd bij rij 70
+ Oude conclusie verwijderd bij rij 71
+ Oude conclusie verwijderd bij rij 73
+ Oude conclusie verwijderd bij rij 74
+ Oude conclusie verwijderd bij rij 75
+ Oude conclusie verwijderd bij rij 80
+ Oude conclusie verwijderd bij rij 82
+ Oude conclusie verwijderd bij rij 83
+ Oude conclusie verwijderd bij rij 84
+ Oude conclusie verwijderd bij rij 85
+ Oude conclusie verwijderd bij rij 86
+ Oude conclusie verwijderd bij rij 87
+ Oude conclusie verwijderd bij rij 89
+ Oude conclusie verwijderd bij rij 91
+ Oude conclusie verwijderd bij rij 92
+ Oude conclusie verwijderd bij rij 93
+ Oude conclusie verwijderd bij rij 94
+ Oude conclusie verwijderd bij rij 95
+ Oude conclusie verwijderd bij rij 96
+ Oude conclusie verwijderd bij rij 97
+ Oude conclusie verwijderd bij rij 98
+ Oude conclusie verwijderd bij rij 100
+ Oude conclusie verwijderd bij rij 101
+ Oude conclusie verwijderd bij rij 102
+ Oude conclusie verwijderd bij rij 103
+ Oude conclusie verwijderd bij rij 105
+ Oude conclusie verwijderd bij rij 107
+ Oude conclusie verwijderd bij rij 110
+ Oude conclusie verwijderd bij rij 112
+ Oude conclusie verwijderd bij rij 113
+ Oude conclusie verwijderd bij rij 115
+ Oude conclusie verwijderd bij rij 142
+ Oude conclusie verwijderd bij rij 190
+ Oude conclusie verwijderd bij rij 194
+ Oude conclusie verwijderd bij rij 195
+ Oude conclusie verwijderd bij rij 196
+ Oude conclusie verwijderd bij rij 197
+ Oude conclusie verwijderd bij rij 198
+ Oude conclusie verwijderd bij rij 199
+ Oude conclusie verwijderd bij rij 201
+ Oude conclusie verwijderd bij rij 202
+ Oude conclusie verwijderd bij rij 203
+ Oude conclusie verwijderd bij rij 204
+ Oude conclusie verwijderd bij rij 205
+ Oude conclusie verwijderd bij rij 207
+ Oude conclusie verwijderd bij rij 208
+ Oude conclusie verwijderd bij rij 209
+ Oude conclusie verwijderd bij rij 211
+ Oude conclusie verwijderd bij rij 215
+ Oude conclusie verwijderd bij rij 217
+ Oude conclusie verwijderd bij rij 218
+ Oude conclusie verwijderd bij rij 219
+ Oude conclusie verwijderd bij rij 220
+ Oude conclusie verwijderd bij rij 222
+ Oude conclusie verwijderd bij rij 224
+ Oude conclusie verwijderd bij rij 227
+ Oude conclusie verwijderd bij rij 228
+ Oude conclusie verwijderd bij rij 229
+ Oude conclusie verwijderd bij rij 230
+ Oude conclusie verwijderd bij rij 231
+ Oude conclusie verwijderd bij rij 232
+ Oude conclusie verwijderd bij rij 233
+ Oude conclusie verwijderd bij rij 234
+ Oude conclusie verwijderd bij rij 235
+ Oude conclusie verwijderd bij rij 236
+ Oude conclusie verwijderd bij rij 239
+ Oude conclusie verwijderd bij rij 240
+ Oude conclusie verwijderd bij rij 243
+ Oude conclusie verwijderd bij rij 245
+ Oude conclusie verwijderd bij rij 246
+ Oude conclusie verwijderd bij rij 248
+ Oude conclusie verwijderd bij rij 254
+ Oude conclusie verwijderd bij rij 255
+ Oude conclusie verwijderd bij rij 257
+ Oude conclusie verwijderd bij rij 258
+ Oude conclusie verwijderd bij rij 260
+ Oude conclusie verwijderd bij rij 262
+ Oude conclusie verwijderd bij rij 266
+ Oude conclusie verwijderd bij rij 268
+ Oude conclusie verwijderd bij rij 270
+ Oude conclusie verwijderd bij rij 271
+ Oude conclusie verwijderd bij rij 274
+ Oude conclusie verwijderd bij rij 280
+ Oude conclusie verwijderd bij rij 282
+ Oude conclusie verwijderd bij rij 283
+ Oude conclusie verwijderd bij rij 284
+ Oude conclusie verwijderd bij rij 285
+ Oude conclusie verwijderd bij rij 287
+ Oude conclusie verwijderd bij rij 288
+ Oude conclusie verwijderd bij rij 294
+ Oude conclusie verwijderd bij rij 297
+ Oude conclusie verwijderd bij rij 303
+ Oude conclusie verwijderd bij rij 305
+ Oude conclusie verwijderd bij rij 306
+ Oude conclusie verwijderd bij rij 311
+ Oude conclusie verwijderd bij rij 312
+ Oude conclusie verwijderd bij rij 317
+ Oude conclusie verwijderd bij rij 320
+ Oude conclusie verwijderd bij rij 326
+ Oude conclusie verwijderd bij rij 327
+ Oude conclusie verwijderd bij rij 329
+ Oude conclusie verwijderd bij rij 331
+ Oude conclusie verwijderd bij rij 334
+ Oude conclusie verwijderd bij rij 339
+ Oude conclusie verwijderd bij rij 340
+ Oude conclusie verwijderd bij rij 341
+ Oude conclusie verwijderd bij rij 343
+ Oude conclusie verwijderd bij rij 345
+ Oude conclusie verwijderd bij rij 346
+ Oude conclusie verwijderd bij rij 347
+ Oude conclusie verwijderd bij rij 349
+ Oude conclusie verwijderd bij rij 353
+ Oude conclusie verwijderd bij rij 355
+ Oude conclusie verwijderd bij rij 356
+ Oude conclusie verwijderd bij rij 357
+ Oude conclusie verwijderd bij rij 359
+ Oude conclusie verwijderd bij rij 360
+ Oude conclusie verwijderd bij rij 363
+ Oude conclusie verwijderd bij rij 364
+ Oude conclusie verwijderd bij rij 365
+ Oude conclusie verwijderd bij rij 366
+ Oude conclusie verwijderd bij rij 371
+ Oude conclusie verwijderd bij rij 372
+ Oude conclusie verwijderd bij rij 373
+ Oude conclusie verwijderd bij rij 375
+ Oude conclusie verwijderd bij rij 376
+ Oude conclusie verwijderd bij rij 377
+ Oude conclusie verwijderd bij rij 378
+ Oude conclusie verwijderd bij rij 380
+ Oude conclusie verwijderd bij rij 381
+ Oude conclusie verwijderd bij rij 382
+ Oude conclusie verwijderd bij rij 384
+ Oude conclusie verwijderd bij rij 386
+ Oude conclusie verwijderd bij rij 392
+ Oude conclusie verwijderd bij rij 394
+ Oude conclusie verwijderd bij rij 397
+ Oude conclusie verwijderd bij rij 398
+ Oude conclusie verwijderd bij rij 399
+ Oude conclusie verwijderd bij rij 400
+ Oude conclusie verwijderd bij rij 409
+ Oude conclusie verwijderd bij rij 413
+ Oude conclusie verwijderd bij rij 419
+ Oude conclusie verwijderd bij rij 420
+ Oude conclusie verwijderd bij rij 422
+ Oude conclusie verwijderd bij rij 423
+ Oude conclusie verwijderd bij rij 426
+ Oude conclusie verwijderd bij rij 430
+ Oude conclusie verwijderd bij rij 434
+ Oude conclusie verwijderd bij rij 436
+ Oude conclusie verwijderd bij rij 437
+ Oude conclusie verwijderd bij rij 439
+ Oude conclusie verwijderd bij rij 442
+ Oude conclusie verwijderd bij rij 443
+ Oude conclusie verwijderd bij rij 446
+ Oude conclusie verwijderd bij rij 448
+ Oude conclusie verwijderd bij rij 450
+ Oude conclusie verwijderd bij rij 452
+ Oude conclusie verwijderd bij rij 455
+ Oude conclusie verwijderd bij rij 459
+ Oude conclusie verwijderd bij rij 460
+ Oude conclusie verwijderd bij rij 462
+ Oude conclusie verwijderd bij rij 466
+ Oude conclusie verwijderd bij rij 467
+ Oude conclusie verwijderd bij rij 469
+ Oude conclusie verwijderd bij rij 473
+ Oude conclusie verwijderd bij rij 476
+ Oude conclusie verwijderd bij rij 477
+ Oude conclusie verwijderd bij rij 478
+ Oude conclusie verwijderd bij rij 479
+ Oude conclusie verwijderd bij rij 480
+ Oude conclusie verwijderd bij rij 484
+ Oude conclusie verwijderd bij rij 491
+ Oude conclusie verwijderd bij rij 494
+ Oude conclusie verwijderd bij rij 495
+ Oude conclusie verwijderd bij rij 497
+ Oude conclusie verwijderd bij rij 498
+ Oude conclusie verwijderd bij rij 502
+ Oude conclusie verwijderd bij rij 506
+ Oude conclusie verwijderd bij rij 508
+ Oude conclusie verwijderd bij rij 510
+ Oude conclusie verwijderd bij rij 511
+ Oude conclusie verwijderd bij rij 516
+ Oude conclusie verwijderd bij rij 517
+ Oude conclusie verwijderd bij rij 519
+ Oude conclusie verwijderd bij rij 527
+ Oude conclusie verwijderd bij rij 530
+ Oude conclusie verwijderd bij rij 531
+ Oude conclusie verwijderd bij rij 535
+ Oude conclusie verwijderd bij rij 537
+ Oude conclusie verwijderd bij rij 541
+ Oude conclusie verwijderd bij rij 543
+ Oude conclusie verwijderd bij rij 544
+ Oude conclusie verwijderd bij rij 547
+ Oude conclusie verwijderd bij rij 550
+ Oude conclusie verwijderd bij rij 556
+ Oude conclusie verwijderd bij rij 559
+ Oude conclusie verwijderd bij rij 563
+ Oude conclusie verwijderd bij rij 564
+ Oude conclusie verwijderd bij rij 565
+ Oude conclusie verwijderd bij rij 571
+ Oude conclusie verwijderd bij rij 572
+ Oude conclusie verwijderd bij rij 602
+ Oude conclusie verwijderd bij rij 603
+ Oude conclusie verwijderd bij rij 605
+ Oude conclusie verwijderd bij rij 606
+ Oude conclusie verwijderd bij rij 610
+ Oude conclusie verwijderd bij rij 612
+ Oude conclusie verwijderd bij rij 613
+ Oude conclusie verwijderd bij rij 618
+ Oude conclusie verwijderd bij rij 624
+ Oude conclusie verwijderd bij rij 626
+ Oude conclusie verwijderd bij rij 627
+ Oude conclusie verwijderd bij rij 628
+ Oude conclusie verwijderd bij rij 635
+ Oude conclusie verwijderd bij rij 644
+ Oude conclusie verwijderd bij rij 648
+ Oude conclusie verwijderd bij rij 649
+ Oude conclusie verwijderd bij rij 650
+ Oude conclusie verwijderd bij rij 651
+ Oude conclusie verwijderd bij rij 654
+ Oude conclusie verwijderd bij rij 655
+ Oude conclusie verwijderd bij rij 657
+ Oude conclusie verwijderd bij rij 660
+ Oude conclusie verwijderd bij rij 664
+ Oude conclusie verwijderd bij rij 665
+ Oude conclusie verwijderd bij rij 666
+ Oude conclusie verwijderd bij rij 670
+ Oude conclusie verwijderd bij rij 672
+ Oude conclusie verwijderd bij rij 685
+ Oude conclusie verwijderd bij rij 686
+ Oude conclusie verwijderd bij rij 688
+ Oude conclusie verwijderd bij rij 691
+ Oude conclusie verwijderd bij rij 692
+ Oude conclusie verwijderd bij rij 693
+ Oude conclusie verwijderd bij rij 694
+ Oude conclusie verwijderd bij rij 695
+ Oude conclusie verwijderd bij rij 706
+ Oude conclusie verwijderd bij rij 711
+ Oude conclusie verwijderd bij rij 712
+ Oude conclusie verwijderd bij rij 717
+ Oude conclusie verwijderd bij rij 722
+ Oude conclusie verwijderd bij rij 726
+ Oude conclusie verwijderd bij rij 752
+ Oude conclusie verwijderd bij rij 754
+ Oude conclusie verwijderd bij rij 763
+ Oude conclusie verwijderd bij rij 781
+ Oude conclusie verwijderd bij rij 782
+ Oude conclusie verwijderd bij rij 783
+ Oude conclusie verwijderd bij rij 785
+ Oude conclusie verwijderd bij rij 796
+ Oude conclusie verwijderd bij rij 802
+ Oude conclusie verwijderd bij rij 804
+ Oude conclusie verwijderd bij rij 811
+ Oude conclusie verwijderd bij rij 814
+ Oude conclusie verwijderd bij rij 816
+ Oude conclusie verwijderd bij rij 824
+ Oude conclusie verwijderd bij rij 827
+ Oude conclusie verwijderd bij rij 828
+ Oude conclusie verwijderd bij rij 829
+ Oude conclusie verwijderd bij rij 830
+ Oude conclusie verwijderd bij rij 832
+ Oude conclusie verwijderd bij rij 842
+ Oude conclusie verwijderd bij rij 843
+ Oude conclusie verwijderd bij rij 844
+ Oude conclusie verwijderd bij rij 845
+ Oude conclusie verwijderd bij rij 848
+ Oude conclusie verwijderd bij rij 849
+ Oude conclusie verwijderd bij rij 853
+ Oude conclusie verwijderd bij rij 862
+ Oude conclusie verwijderd bij rij 867
+ Oude conclusie verwijderd bij rij 868
+ Oude conclusie verwijderd bij rij 885
+ Oude conclusie verwijderd bij rij 890
+ Oude conclusie verwijderd bij rij 899
+ Oude conclusie verwijderd bij rij 911
+ Oude conclusie verwijderd bij rij 916
+ Oude conclusie verwijderd bij rij 917
+ Oude conclusie verwijderd bij rij 923
+ Oude conclusie verwijderd bij rij 926
+ Oude conclusie verwijderd bij rij 944
+ Oude conclusie verwijderd bij rij 945
+ Oude conclusie verwijderd bij rij 947
+ Oude conclusie verwijderd bij rij 953
+ Oude conclusie verwijderd bij rij 954
+ Oude conclusie verwijderd bij rij 956
+ Oude conclusie verwijderd bij rij 961
+ Oude conclusie verwijderd bij rij 966
+ Oude conclusie verwijderd bij rij 967
+ Oude conclusie verwijderd bij rij 969
+ Oude conclusie verwijderd bij rij 971
+ Oude conclusie verwijderd bij rij 979
+ Oude conclusie verwijderd bij rij 982
+ Oude conclusie verwijderd bij rij 990
+ Oude conclusie verwijderd bij rij 991
+ Oude conclusie verwijderd bij rij 994
+ Oude conclusie verwijderd bij rij 996
+ Oude conclusie verwijderd bij rij 997
+ Oude conclusie verwijderd bij rij 1002
+ Oude conclusie verwijderd bij rij 1006
+ Oude conclusie verwijderd bij rij 1010
+ Oude conclusie verwijderd bij rij 1016
+ Oude conclusie verwijderd bij rij 1021
+ Oude conclusie verwijderd bij rij 1031
+ Oude conclusie verwijderd bij rij 1032
+ Oude conclusie verwijderd bij rij 1034
+ Oude conclusie verwijderd bij rij 1039
+ Oude conclusie verwijderd bij rij 1040
+ Oude conclusie verwijderd bij rij 1041
+ Oude conclusie verwijderd bij rij 1042
+ Oude conclusie verwijderd bij rij 1044
+ Oude conclusie verwijderd bij rij 1050
+ Oude conclusie verwijderd bij rij 1058
+ Oude conclusie verwijderd bij rij 1064
+ Oude conclusie verwijderd bij rij 1067
+ Oude conclusie verwijderd bij rij 1069
+ Oude conclusie verwijderd bij rij 1072
+ Oude conclusie verwijderd bij rij 1074
+ Oude conclusie verwijderd bij rij 1076
+ Oude conclusie verwijderd bij rij 1078
+ Oude conclusie verwijderd bij rij 1080
+ Oude conclusie verwijderd bij rij 1083
+ Oude conclusie verwijderd bij rij 1086
+ Oude conclusie verwijderd bij rij 1090
+ Oude conclusie verwijderd bij rij 1092
+ Oude conclusie verwijderd bij rij 1099
+ Oude conclusie verwijderd bij rij 1100
+ Oude conclusie verwijderd bij rij 1101
+ Oude conclusie verwijderd bij rij 1102
+ Oude conclusie verwijderd bij rij 1110
+ Oude conclusie verwijderd bij rij 1113
+ Oude conclusie verwijderd bij rij 1126
+ Oude conclusie verwijderd bij rij 1127
+ Oude conclusie verwijderd bij rij 1132
+ Oude conclusie verwijderd bij rij 1134
+ Oude conclusie verwijderd bij rij 1135
+ Oude conclusie verwijderd bij rij 1137
+ Oude conclusie verwijderd bij rij 1147
+ Oude conclusie verwijderd bij rij 1148
+ Oude conclusie verwijderd bij rij 1150
+ Oude conclusie verwijderd bij rij 1161
+ Oude conclusie verwijderd bij rij 1165
+ Oude conclusie verwijderd bij rij 1166
+ Oude conclusie verwijderd bij rij 1168
+ Oude conclusie verwijderd bij rij 1172
+ Oude conclusie verwijderd bij rij 1188
+ Oude conclusie verwijderd bij rij 1189
+ Oude conclusie verwijderd bij rij 1199
+ Oude conclusie verwijderd bij rij 1202
+ Oude conclusie verwijderd bij rij 1211
+ Oude conclusie verwijderd bij rij 1235
+ Oude conclusie verwijderd bij rij 1236
+ Oude conclusie verwijderd bij rij 1237
+ Oude conclusie verwijderd bij rij 1245
+ Oude conclusie verwijderd bij rij 1315
+ Oude conclusie verwijderd bij rij 1364
+ Oude conclusie verwijderd bij rij 1395
+ Oude conclusie verwijderd bij rij 1404
+ Oude conclusie verwijderd bij rij 1414
+ Oude conclusie verwijderd bij rij 1430
+ Oude conclusie verwijderd bij rij 1433
+ Oude conclusie verwijderd bij rij 1434
+ Oude conclusie verwijderd bij rij 1461
+ Oude conclusie verwijderd bij rij 1469
+ Oude conclusie verwijderd bij rij 1472
+ Oude conclusie verwijderd bij rij 1473
+ Oude conclusie verwijderd bij rij 1475
+ Oude conclusie verwijderd bij rij 1492
+ Oude conclusie verwijderd bij rij 1507
+ Oude conclusie verwijderd bij rij 1513
+ Oude conclusie verwijderd bij rij 1519
+ Oude conclusie verwijderd bij rij 1543
+ Oude conclusie verwijderd bij rij 1544
+ Oude conclusie verwijderd bij rij 1573
+ Oude conclusie verwijderd bij rij 1574
+ Oude conclusie verwijderd bij rij 1584
+ Oude conclusie verwijderd bij rij 1593
+ Oude conclusie verwijderd bij rij 1601
+ Oude conclusie verwijderd bij rij 1603
+ Oude conclusie verwijderd bij rij 1605
+ Oude conclusie verwijderd bij rij 1641
+ Oude conclusie verwijderd bij rij 1651
+ Oude conclusie verwijderd bij rij 1656
+ Oude conclusie verwijderd bij rij 1658
+ Oude conclusie verwijderd bij rij 1659
+ Oude conclusie verwijderd bij rij 1660
+ Oude conclusie verwijderd bij rij 1678
+ Oude conclusie verwijderd bij rij 1681
+ Oude conclusie verwijderd bij rij 1729
+ Oude conclusie verwijderd bij rij 1752
+ Oude conclusie verwijderd bij rij 1758
+ Oude conclusie verwijderd bij rij 1759
+ Oude conclusie verwijderd bij rij 1787
+ Oude conclusie verwijderd bij rij 1788
+ Oude conclusie verwijderd bij rij 1801
+ Oude conclusie verwijderd bij rij 1820
+ Oude conclusie verwijderd bij rij 1833
+ Oude conclusie verwijderd bij rij 1841
+ Oude conclusie verwijderd bij rij 1869
+ Oude conclusie verwijderd bij rij 1872
+ Oude conclusie verwijderd bij rij 1909
+ Oude conclusie verwijderd bij rij 1937
+ Oude conclusie verwijderd bij rij 1959
+ Oude conclusie verwijderd bij rij 1964
+ Oude conclusie verwijderd bij rij 1967
+ Oude conclusie verwijderd bij rij 1968
+ Oude conclusie verwijderd bij rij 1984
+ Oude conclusie verwijderd bij rij 2010
+ Oude conclusie verwijderd bij rij 2012
+ Oude conclusie verwijderd bij rij 2083
+ Oude conclusie verwijderd bij rij 2085
+ Oude conclusie verwijderd bij rij 2086
+ Oude conclusie verwijderd bij rij 2087
+ Oude conclusie verwijderd bij rij 2115
+ Oude conclusie verwijderd bij rij 2118
+ Oude conclusie verwijderd bij rij 2128
+ Oude conclusie verwijderd bij rij 2130
+ Oude conclusie verwijderd bij rij 2135
+ Oude conclusie verwijderd bij rij 2136
+ Oude conclusie verwijderd bij rij 2138
+ Oude conclusie verwijderd bij rij 2148
+ Projectleider: 1585 bijgewerkt, 425 verwijderd
+ Bespreekpunten: 565 bijgewerkt, 0 verwijderd
+ Oude actiepunt (elders) verwijderd bij rij 3
+ Oude actiepunt (elders) verwijderd bij rij 41
+ Oude actiepunt (elders) verwijderd bij rij 859
+ Oude actiepunt (elders) verwijderd bij rij 1011
+ Oude actiepunt (elders) verwijderd bij rij 1380
+ Oude actiepunt (elders) verwijderd bij rij 1437
+ Actiepunten Elders: 396 bijgewerkt, 6 verwijderd
+ Conclusies bijgewerkt in bestand: Overzicht_Projectadministratie_Week44_2025.xlsx
+
+2025-10-31 15:13:11,466 [INFO] \u2705 Script calculate_conclusions.py succesvol afgerond.
+2025-10-31 15:13:11,466 [INFO]  Start script: overview_to_workingfile.py
+2025-10-31 15:13:14,059 [INFO]  Uniek in 'Handmatig verwacht resultaat': ['False', 'True']
+ Werkbestand gegenereerd: C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output\Werkbestand_AlleProjecten_2025-10-31.xlsx
+ Oudere werkbestanden verplaatst naar: C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output\Werkbestanden archief
+ Vul waarden in de kolommen zonder kleur (grijze randen).
+
+2025-10-31 15:13:14,059 [INFO] \u2705 Script overview_to_workingfile.py succesvol afgerond.
+2025-10-31 15:13:14,059 [INFO] \u2705 SYNC-PROCES SUCCESVOL AFGEROND
