@@ -72,7 +72,7 @@ def make_bespreekpunten(row):
     wo = to_float(row.get("Werkelijke opbrengsten"))
     if bo is not None and wo is not None:
         if bo != 0 and bo <= wo:
-            bullets.append("• Klaar om te sluiten?")
+            bullets.append("• Opbrengsten binnen")
 
     # 3) Bestaande regel: Openstaande SO = Ja → dochterproject
     val_so = row.get("Openstaande SO", "")
@@ -87,8 +87,6 @@ def make_bespreekpunten(row):
     all_three_nee = all(is_nee(v) for v in vals) and all(str(v).strip() != "" for v in vals)
 
     if all_three_nee:
-        # Verwijder eventuele 'Klaar om te sluiten?'
-        bullets = [b for b in bullets if "Klaar om te sluiten?" not in b]
         # Voeg nieuwe conclusie toe
         bullets.append("• Gesloten SO, project sluiten na goedkeuring")
 

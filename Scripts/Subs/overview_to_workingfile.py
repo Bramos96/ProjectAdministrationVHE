@@ -145,16 +145,33 @@ close_view_df = df[[c for c in CLOSE_COLS if c in df.columns]].copy()
 # zoekwoorden voor bepalen of dit project in Sheet2 hoort
 _PATTERNS = ["sluit", "afsluit", "afhandel", "afhand"]
 
+# 1. check oude logica ("sluit / afsluit / afhandel / afhand" in Actiepunten Bram)
 if "Actiepunten Bram" in close_view_df.columns:
-    mask_close = (
+    mask_bram = (
         close_view_df["Actiepunten Bram"]
         .astype(str)
         .str.lower()
         .apply(lambda txt: any(p in txt for p in _PATTERNS))
     )
-    to_close_df = close_view_df[mask_close].copy()
 else:
-    to_close_df = close_view_df.iloc[0:0].copy()
+    # kolom bestaat niet? dan is alles False
+    mask_bram = pd.Series(False, index=close_view_df.index)
+
+# 2. check nieuwe logica ("Opbrengsten binnen" in Bespreekpunten)
+if "Bespreekpunten" in close_view_df.columns:
+    mask_opbrengst = (
+        close_view_df["Bespreekpunten"]
+        .astype(str)
+        .str.contains("Opbrengsten binnen", case=False, na=False)
+    )
+else:
+    mask_opbrengst = pd.Series(False, index=close_view_df.index)
+
+# 3. EN-condition: alleen meenemen als beide waar zijn
+mask_close = mask_bram & mask_opbrengst
+
+to_close_df = close_view_df[mask_close].copy()
+
 
 # ── Bepaal 'Eindacties' per project ─────────────────────────
 # regels die we willen herkennen
@@ -166,22 +183,29 @@ STATUS_CANDIDATES = [
 ]
 
 def extract_eindactie(row):
-    # Combineer relevante bronnen in één tekst
-    text_parts = []
-    if "Actiepunten Elders" in row and pd.notna(row["Actiepunten Elders"]):
-        text_parts.append(str(row["Actiepunten Elders"]))
-    if "Bespreekpunten" in row and pd.notna(row["Bespreekpunten"]):
-        text_parts.append(str(row["Bespreekpunten"]))
+    # Pak de losse velden eerst even veilig
+    bespreek = str(row.get("Bespreekpunten", "") or "")
+    elders   = str(row.get("Actiepunten Elders", "") or "")
 
-    combined = "\n".join(text_parts)
+    combined = "\n".join([elders, bespreek]).strip()
 
-    # Kijk of één van de bekende statussen letterlijk voorkomt
+    # 0. Heeft dit project al 'Opbrengsten binnen' ? (== omzet is volledig gefactureerd/geboekt)
+    heeft_opbrengst_binnen = ("opbrengsten binnen" in bespreek.lower())
+
+    if not heeft_opbrengst_binnen:
+        # We willen dit project wél tonen in Sheet2,
+        # maar duidelijk maken wat er nog moet gebeuren:
+        # -> er mist nog omzet dus eerst factureren.
+        return "Factureren"
+
+    # 1. Als opbrengsten binnen is wél aanwezig, dan proberen we jouw bestaande eindstatus te bepalen:
     for status in STATUS_CANDIDATES:
         if status.lower() in combined.lower():
             return status
 
-    # Geen match
+    # 2. Geen specifieke status nodig -> leeg (dan wordt 'Finale check' straks groen)
     return ""
+
 
 # nieuwe kolom toevoegen
 to_close_df["Eindacties"] = to_close_df.apply(extract_eindactie, axis=1)
