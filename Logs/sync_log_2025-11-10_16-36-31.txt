@@ -1,0 +1,61 @@
+2025-11-10 16:36:31,657 [INFO] \U0001f680 START SYNC PROCESS
+2025-11-10 16:36:31,657 [INFO]  Start script: workingfile_to_overview.py
+2025-11-10 16:36:33,213 [INFO]  Tool 1: Synchroniseer werkbestand centraal bestand
+ Zoek nieuwste werkbestand...
+   Gevonden: Werkbestand_AlleProjecten_2025-11-10.xlsx
+ Zoek nieuwste overzichtbestand...
+   Gevonden: Overzicht_Projectadministratie_Week46_2025.xlsx
+ Synchroniseer data...
+    HANDMATIG: nan = €0.0
+ Sla overzichtbestand op...
+ Synchronisatie voltooid!
+    Gewijzigde waarden: 1
+    Manual overrides: 1
+
+2025-11-10 16:36:33,214 [INFO] \u2705 Script workingfile_to_overview.py succesvol afgerond.
+2025-11-10 16:36:33,215 [INFO]  Start script: read_latest_input.py
+2025-11-10 16:36:38,802 [INFO] CHECK >>>
+Openstaande PO value_counts:
+Openstaande PO
+NaN    1682
+Nee     415
+Ja      189
+Name: count, dtype: int64
+Openstaande SO value_counts:
+Openstaande SO
+NaN    1682
+Nee     602
+Ja        2
+Name: count, dtype: int64
+Openstaande bestelling value_counts:
+Openstaande bestelling
+NaN    1682
+Nee     597
+Ja        7
+Name: count, dtype: int64
+
+Voorbeeld handmatige kolommen (niet leeg als het goed is):
+Empty DataFrame
+Columns: [Algemene informatie, Actiepunten Bram, 2e Projectleider]
+Index: []
+<<< END CHECK
+Klaar, opgeslagen als: Overzicht_Projectadministratie_Week46_2025.xlsx
+
+2025-11-10 16:36:38,802 [INFO] \u2705 Script read_latest_input.py succesvol afgerond.
+2025-11-10 16:36:38,802 [INFO]  Start script: calculate_conclusions.py
+2025-11-10 16:36:41,749 [INFO]  Gekozen centraal bestand: Overzicht_Projectadministratie_Week46_2025.xlsx
+ 'Gesloten SO' onderdrukking toegepast: 885 regels verwijderd
+ Projectleider: 1613 bijgewerkt, 0 verwijderd
+ Bespreekpunten: 591 bijgewerkt, 0 verwijderd
+ Actiepunten Elders: 193 bijgewerkt, 0 verwijderd
+ Conclusies bijgewerkt in bestand: Overzicht_Projectadministratie_Week46_2025.xlsx
+
+2025-11-10 16:36:41,749 [INFO] \u2705 Script calculate_conclusions.py succesvol afgerond.
+2025-11-10 16:36:41,749 [INFO]  Start script: overview_to_workingfile.py
+2025-11-10 16:36:45,030 [INFO]  Uniek in 'Handmatig verwacht resultaat': ['True']
+ Werkbestand gegenereerd: C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output\Werkbestand_AlleProjecten_2025-11-10.xlsx
+ Oudere werkbestanden verplaatst naar: C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output\Werkbestanden archief
+ Vul waarden in de kolommen zonder kleur (grijze randen).
+
+2025-11-10 16:36:45,030 [INFO] \u2705 Script overview_to_workingfile.py succesvol afgerond.
+2025-11-10 16:36:45,030 [INFO] \u2705 SYNC-PROCES SUCCESVOL AFGEROND

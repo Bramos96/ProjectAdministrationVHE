@@ -73,7 +73,7 @@ RECIPIENT_BY_PHRASE = {
     "Gesloten SO met openstaande bestelling": "Inkoop",
     "Gesloten SO met openstaande PO - Prod": "Judith",
     "Gesloten SO met openstaande PO - Proto": "Inkoop",
-    "Orderregel(s) toewijzen aan PR": "Inkoop",
+    
 }
 RECIPIENT_BY_PHRASE_NORM = {norm_txt(k): v for k, v in RECIPIENT_BY_PHRASE.items()}
 
