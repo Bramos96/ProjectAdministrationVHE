@@ -51,6 +51,22 @@ def norm_txt(s: str) -> str:
     s = re.sub(r"\s+", " ", s)
     return s.strip().lower()
 
+def is_empty_action_cell(x) -> bool:
+    """
+    Bepaalt of 'Actiepunten Bram' in praktijk leeg is.
+    - Lege cel (NaN)
+    - Alleen spaties / NBSP
+    - Of tokens als '-', 'nvt', 'n.v.t.', 'geen'
+    tellen als 'leeg' → dan mag het project gemaild worden.
+    """
+    if pd.isna(x):
+        return True
+    s = str(x).replace("\u00A0", " ").strip()
+    if s.lower() in {"", "-", "nvt", "n.v.t.", "geen"}:
+        return True
+    return False
+
+# ── Overzicht inlezen ──────────────────────────────────────
 overview_path = find_latest_overview(OUTPUT_FOLDER)
 df = pd.read_excel(overview_path, sheet_name=OVERVIEW_SHEET, header=0)
 df.columns = df.columns.str.strip()
@@ -78,6 +94,7 @@ if content_col is None:
 cols = [c for c in ["Projectnummer", "Projectnaam", "Projectleider", content_col, ACTION_BRAM_COL] if c in df.columns]
 df = df[cols].copy()
 
+# ── E-mail mapping inlezen ─────────────────────────────────
 emap = pd.read_excel(EMAILMAP_FILE, sheet_name=EMAILMAP_SHEET)
 emap.columns = emap.columns.str.strip()
 if "Naam" not in emap.columns or "Email" not in emap.columns:
@@ -93,16 +110,23 @@ def get_email(name: str) -> str:
 phrases_norm = [norm_txt(p) for p in TARGET_PHRASES]
 
 def meets_both_conditions(txt: str) -> bool:
+    """
+    Controleert of de tekst beide TARGET_PHRASES bevat (na normalisatie).
+    """
     if not isinstance(txt, str) or not txt.strip():
         return False
     t = norm_txt(txt)
     return all(p in t for p in phrases_norm)
 
+# ── Selectie van projecten die gemaild moeten worden ───────
 records = []
 for _, r in df.iterrows():
-    actie_bram = str(r.get(ACTION_BRAM_COL, "")).strip()
-    if actie_bram:
-        continue  # overslaan als er actiepunten bij Bram staan
+    # 1) Actiepunten Bram moet in praktijk 'leeg' zijn
+    actie_bram_raw = r.get(ACTION_BRAM_COL, None)
+    if not is_empty_action_cell(actie_bram_raw):
+        continue  # er staat iets bij Bram → dit project NIET automatisch mailen
+
+    # 2) De tekst in content_col moet beide sluit-voorwaarden bevatten
     if meets_both_conditions(r.get(content_col, "")):
         records.append({
             "Projectnummer": r.get("Projectnummer"),
@@ -110,12 +134,14 @@ for _, r in df.iterrows():
             "Projectleider": r.get("Projectleider"),
             "Reasons": [REASON_LABEL],
         })
+
 closing_df = pd.DataFrame(records)
 
 if closing_df.empty:
-    print("ℹ️ Geen projecten gevonden die aan beide sluit-voorwaarden voldoen of actiepunten bij Bram hebben.")
+    print("ℹ️ Geen projecten gevonden die aan beide sluit-voorwaarden voldoen of waarvan 'Actiepunten Bram' leeg is.")
     raise SystemExit(0)
 
+# ── Outlook voorbereiden ───────────────────────────────────
 signature_html = get_signature_html()
 try:
     outlook = win32.Dispatch("Outlook.Application")
@@ -127,6 +153,7 @@ week_str = datetime.now().strftime("Week %W, %Y")
 test_tag = "[TEST] " if TESTMODE else ""
 mail_count = 0
 
+# ── Mails per projectleider genereren ──────────────────────
 for leader, sub in closing_df.groupby("Projectleider"):
     if not w_map.get(leader, False):
         print(f"⛔ Niet op whitelist: {leader} – mail overgeslagen")
