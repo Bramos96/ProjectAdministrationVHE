@@ -1,129 +1,104 @@
 import os
+import sqlite3
+from datetime import date
 import pandas as pd
-from openpyxl import load_workbook
-from openpyxl.utils.dataframe import dataframe_to_rows
-from datetime import datetime
-import glob
 
-# ───────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────
+# PADEN AANPASSEN NAAR JOUW SITUATIE
+# ─────────────────────────────────────────────
 OUTPUT_FOLDER = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output"
-POWERBI_FILE = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\PowerBI.xlsx"
-LOG_SHEET = "Log"
-# ───────────────────────────────────────────────────────────
+DB_FILE       = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\projectadmin.db"
 
-# 1. Zoek laatste overzicht-bestand
-pattern = os.path.join(
-    OUTPUT_FOLDER,
-    "Overzicht_Projectadministratie_Week*.xlsx"
-)
-files = glob.glob(pattern)
-
-if files:
-    files.sort(key=os.path.getmtime, reverse=True)
-    INPUT_FILE = files[0]
-    print(f"👉 Laatste bestand gevonden: {INPUT_FILE}")
-else:
-    raise FileNotFoundError("Geen overzichtsbestand gevonden in de Output-folder.")
-
-# 2. Week & jaar bepalen
-today = datetime.today()
-week = today.isocalendar()[1]
-jaar = today.year
-
-# 3. Lees overzichtbestand
-df = pd.read_excel(INPUT_FILE, sheet_name="Overzicht", header=0)
-df.columns = df.columns.str.strip()
-
-print("Kolommen in df:", df.columns.tolist())
-print("Voorbeeld Projectleider waardes:", df["Projectleider"].head(10).tolist())
-print("Voorbeeld Type waardes:", df["Type"].head(10).tolist())
-
-
-# 4. Combineer en split actiepunten
-cols = ["Actiepunten Projectleider", "Bespreekpunten", "Actiepunten Bram"]
-for col in cols:
-    if col in df.columns:
-        df[col] = df[col].fillna("").astype(str)
-    else:
-        df[col] = ""
-
-df["Actiepunten"] = df[cols].apply(
-    lambda row: "; ".join([v.strip() for v in row if v.strip()]),
-    axis=1
-)
-
-records = []
-for _, row in df.iterrows():
-    project = row["Projectnummer"]
-    actiepunten = row["Actiepunten"]
-
-    # Extra velden (altijd string, nooit NaN)
-    projectleider = str(row.get("Projectleider", "") or "").strip()
-    type_val = str(row.get("Type", "") or "").strip()
-
-    if actiepunten:
-        actiepunten_clean = actiepunten.replace("•", ";")
-        for a in actiepunten_clean.split(";"):
-            cleaned = a.strip().lstrip("•").strip()
-            if cleaned:
-                records.append({
-                    "Projectnummer": project,
-                    "Projectleider": projectleider,
-                    "Type": type_val,
-                    "Actiepunt": cleaned,
-                    "Week": week,
-                    "Jaar": jaar
-                })
-
-df_new = pd.DataFrame(records)
-
-print("Kolommen in df_new:", df_new.columns.tolist())
-print(df_new.head(10).to_string())
-
-# 5. Open of maak werkboek
-if os.path.exists(POWERBI_FILE):
-    wb = load_workbook(POWERBI_FILE)
-else:
-    wb = load_workbook(filename=None)
-
-# 6. Haal of maak logsheet
-if LOG_SHEET in wb.sheetnames:
-    ws = wb[LOG_SHEET]
-
-    # Huidige inhoud ophalen als DataFrame
-    existing = pd.DataFrame(ws.values)
-    existing.columns = existing.iloc[0]
-    existing = existing.drop(0)
-
-    # Filter bestaande data op andere weken dan huidige
-    existing = existing[
-        ~((existing["Week"] == str(week)) & (existing["Jaar"] == str(jaar)))
+def find_latest_overview(folder: str) -> str:
+    """Zoekt het nieuwste Overzicht-bestand in de Output-map."""
+    files = [
+        f for f in os.listdir(folder)
+        if f.lower().startswith("overzicht") and f.lower().endswith(".xlsx")
     ]
 
-    # Combineer bestaande en nieuwe data
-    df_combined = pd.concat([existing, df_new], ignore_index=True)
+    if not files:
+        raise FileNotFoundError("Geen Overzicht-bestanden gevonden!")
 
-    # Dubbele regels verwijderen
-    df_combined.drop_duplicates(
-        subset=["Projectnummer", "Actiepunt", "Week", "Jaar"],
-        inplace=True
-    )
-
-else:
-    wb.create_sheet(LOG_SHEET)
-    df_combined = df_new
+    # Sorteer op bewerkingsdatum
+    files = sorted(files, key=lambda f: os.path.getmtime(os.path.join(folder, f)), reverse=True)
+    newest = os.path.join(folder, files[0])
+    return newest
 
 
-# 7. Overschrijf logsheet
-if LOG_SHEET in wb.sheetnames:
-    ws = wb[LOG_SHEET]
-    wb.remove(ws)
-wb.create_sheet(LOG_SHEET)
-ws = wb[LOG_SHEET]
+def load_overview(excel_path: str) -> pd.DataFrame:
+    """Leest het Excel-overzicht in (tabblad 'Overzicht', koprij in rij 1)."""
+    df = pd.read_excel(excel_path, sheet_name="Overzicht", header=0)
+    return df
 
-for r in dataframe_to_rows(df_combined, index=False, header=True):
-    ws.append(r)
 
-# 8. Opslaan
-wb.save(POWERBI_FILE)
-print(f"✅ {len(df_new)} actiepunten gelogd voor week {week}, jaar {jaar}.")
+def write_snapshot(df_central: pd.DataFrame) -> None:
+    """
+    Schrijft een snapshot met:
+    - snapshot_date  (datum script-run)
+    - snapshot_week  (weeknummer van snapshot)
+    - ALLE kolommen uit het projectoverzicht
+    naar de tabel 'project_snapshots_full' in SQLite.
+    """
+    import sqlite3
+    from datetime import date
+
+    conn = sqlite3.connect(DB_FILE)
+
+    today = date.today()
+    snapshot_date = today.isoformat()
+    snapshot_week = today.isocalendar().week  # ISO-weeknummer
+
+    # Kopie van het hele overzicht
+    df_snap = df_central.copy()
+
+    # Extra meta-kolommen toevoegen
+    # We zetten ze vooraan zodat ze makkelijk te vinden zijn in Power BI
+    df_snap.insert(0, "snapshot_date", snapshot_date)
+    df_snap.insert(1, "snapshot_week", snapshot_week)
+
+    # Wegschrijven naar NIEUWE tabelnaam
+    df_snap.to_sql("project_snapshots_full", conn, if_exists="append", index=False)
+
+    conn.close()
+    print(f"{len(df_snap)} regels opgeslagen in 'project_snapshots_full'.")
+
+
+
+def main():
+    print("🔍 Nieuwste Overzicht-bestand zoeken...")
+    latest_file = find_latest_overview(OUTPUT_FOLDER)
+    print(f"→ Geselecteerd bestand: {latest_file}")
+
+    print("📖 Bestand inlezen...")
+    df = load_overview(latest_file)
+
+    print("💾 Wegschrijven naar database...")
+    write_snapshot_to_csv(df)
+
+    print("🎉 Klaar! Snapshot opgeslagen in projectadmin.db")
+
+def write_snapshot_to_csv(df_central: pd.DataFrame) -> None:
+    from datetime import date
+    import os
+
+    today = date.today()
+    snapshot_date = today.isoformat()
+    snapshot_week = today.isocalendar().week
+
+    # Map voor snapshots
+    SNAPSHOT_FOLDER = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Snapshots"
+    os.makedirs(SNAPSHOT_FOLDER, exist_ok=True)
+
+    df_snap = df_central.copy()
+    df_snap.insert(0, "snapshot_date", snapshot_date)
+    df_snap.insert(1, "snapshot_week", snapshot_week)
+
+    output_file = os.path.join(SNAPSHOT_FOLDER, f"snapshot_{snapshot_date}.csv")
+
+    df_snap.to_csv(output_file, index=False, sep=';')  # ; werkt beter voor NL Excel/Power BI
+
+    print(f"📦 Snapshot opgeslagen als CSV: {output_file}")
+
+
+if __name__ == "__main__":
+    main()

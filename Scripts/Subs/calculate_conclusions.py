@@ -92,6 +92,28 @@ def make_bespreekpunten(row):
 
     return "\n".join(bullets)
 
+def make_proto_prod(row):
+    """Return Proto/Prod classification based on Type."""
+    t = str(row.get("Type", "")).strip().lower()
+
+    mapping = {
+        "former qnq customers": "Proto",
+        "orders handel": "Proto",
+        "orders kabelafdeling": "Prod",
+        "orders kastenbouw asml": "Proto",
+        "orders projecten": "Proto",
+        "orders xt sets": "Prod",
+        "proto": "Proto",
+        "service orders": "Proto",
+    }
+
+    # match exact key
+    if t in mapping:
+        return mapping[t]
+
+    return ""  # niets als er geen match is
+
+
 
 def make_actiepunten_elders(row):
     """
@@ -166,6 +188,8 @@ def main():
     df["Actiepunten Projectleider"] = df.apply(lambda r: make_actions_projectleider(r, today), axis=1)
     df["Bespreekpunten"] = df.apply(make_bespreekpunten, axis=1)
     df["Actiepunten Elders"] = df.apply(make_actiepunten_elders, axis=1)
+    df["Proto/Prod"] = df.apply(make_proto_prod, axis=1)
+
 
 # ─── Onderdruk actiepunten als er 'gesloten SO' voorkomt ──────────────────────────
     def _contains_gesloten_so(s: str) -> bool:
@@ -279,6 +303,18 @@ def main():
                 cell.value = None
                 ws.row_dimensions[idx].height = None
         print(f" Actiepunten Elders: {updated_count} bijgewerkt, {removed_count} verwijderd")
+
+    # Update Proto/Prod
+    if "Proto/Prod" in col_letters:
+        col_letter = col_letters["Proto/Prod"]
+        updated_count = 0
+        for idx, value in enumerate(df["Proto/Prod"], start=2):
+            cell = ws[f"{col_letter}{idx}"]
+            cell.value = value or None
+            cell.alignment = Alignment(horizontal="center", vertical="center")
+            updated_count += 1
+        print(f" Proto/Prod: {updated_count} rijen bijgewerkt")
+
 
     # Maak kolommen breder
     for col_name in ["Actiepunten Projectleider", "Bespreekpunten"]:
