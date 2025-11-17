@@ -13,7 +13,8 @@ SYNC_COLUMNS = [
     "Algemene informatie",
     "Verwacht resultaat",     # Gets value from "Aangepast resultaat" if not empty
     "Actiepunten Bram",
-    "2e Projectleider"
+    "2e Projectleider",
+    "Sluiten"
 ]
 
 MANUAL_INPUT_COLUMN = "Aangepast resultaat"
@@ -51,6 +52,31 @@ def get_project_row_mapping(worksheet, start_row=2):
         if pn:
             mapping[str(pn).strip()] = r
     return mapping
+
+def normalize_sluiten_value(val):
+    """Zet alles wat op 'ja' lijkt om naar exact 'Ja'."""
+    import pandas as pd
+
+    if pd.isna(val):
+        return None
+
+    s = str(val).strip()
+    if not s:
+        return None
+
+    lower = s.lower()
+
+    # Alles wat begint met 'ja' → Ja (ja, jaa, jaaa, ja hoor, JAA, etc.)
+    if lower.startswith("ja"):
+        return "Ja"
+
+    # Eventueel nog een paar andere bevestigende varianten
+    if lower in {"y", "yes", "1", "true"}:
+        return "Ja"
+
+    # Anders gewoon originele (schoongemaakte) tekst teruggeven
+    return s
+
 
 def main():
     print(" Tool 1: Synchroniseer werkbestand centraal bestand")
@@ -144,6 +170,9 @@ def main():
                             new_val = df_work.at[projectnummer, kolom_lower]
                             old_val = ws[cell_ref].value
 
+                            # -------------------------------------------------
+                            # 1) Speciaal geval: Verwacht resultaat + overrides
+                            # -------------------------------------------------
                             if kolom == "Verwacht resultaat":
                                 is_manual = False
                                 final_value = new_val
@@ -154,7 +183,7 @@ def main():
                                     if pd.notna(manual_override) and str(manual_override).strip() != "":
                                         final_value = manual_override
                                         is_manual = True
-                                        print(f"    HANDMATIG: {projectnummer} = €{final_value}")
+                                        print(f"        HANDMATIG: {projectnummer} = €{final_value}")
 
                                 if pd.notna(final_value) and str(final_value).strip() != str(old_val).strip():
                                     ws[cell_ref].value = final_value
@@ -169,10 +198,23 @@ def main():
                                     ws[cell_ref].font = ZWART_FONT
                                     ws[f"{status_col_letter}{row_idx}"].value = False
 
+                            # -------------------------------------------------
+                            # 2) Speciaal geval: Sluiten → normaliseren naar "Ja"
+                            # -------------------------------------------------
+                            elif kolom == "Sluiten":
+                                normalized = normalize_sluiten_value(new_val)
+                                if normalized is not None and str(normalized).strip() != str(old_val).strip():
+                                    ws[cell_ref].value = normalized
+                                    updates += 1
+
+                            # -------------------------------------------------
+                            # 3) Standaard synchronisatie
+                            # -------------------------------------------------
                             else:
                                 if pd.notna(new_val) and str(new_val).strip() != str(old_val).strip():
                                     ws[cell_ref].value = new_val
                                     updates += 1
+
 
         print(" Sla overzichtbestand op...")
         wb.save(overview_path)
