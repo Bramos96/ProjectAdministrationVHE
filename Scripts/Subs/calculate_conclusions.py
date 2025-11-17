@@ -73,29 +73,20 @@ def make_bespreekpunten(row):
 # ───────────────────────────────────────────
 # INFORMATIE (opbrengsten binnen + gesloten SO definitief)
 # ───────────────────────────────────────────
+# ───────────────────────────────────────────
+# INFORMATIE (alleen gesloten SO definitief)
+# ───────────────────────────────────────────
 def make_informatie(row):
     bullets = []
-
-    def to_float(x):
-        try:
-            return float(x)
-        except:
-            return None
 
     def is_nee(v):
         s = str(v).strip().lower()
         return s in {"nee", "no", "n", "false", "0"}
 
-    # 1) Opbrengsten binnen
-    bo = to_float(row.get("Budget Opbrengsten"))
-    wo = to_float(row.get("Werkelijke opbrengsten"))
-    if bo is not None and wo is not None:
-        if bo != 0 and bo <= wo:
-            bullets.append("• Opbrengsten binnen")
-
-    # 2) Gesloten SO → project sluiten
+    # 1) Gesloten SO → project sluiten na goedkeuring
     cols_sc = ["Openstaande bestelling", "Openstaande SO", "Openstaande PO"]
     vals = [row.get(c, "") for c in cols_sc]
+
     all_three_nee = (
         all(is_nee(v) for v in vals)
         and all(str(v).strip() != "" for v in vals)
@@ -105,6 +96,30 @@ def make_informatie(row):
         bullets.append("• Gesloten SO, project sluiten na goedkeuring")
 
     return "\n".join(bullets)
+
+# ───────────────────────────────────────────
+# WARNING-KOLOM (opbrengsten mismatch)
+# ───────────────────────────────────────────
+def make_warning(row):
+    def to_float(x):
+        try:
+            return float(x)
+        except:
+            return None
+
+    bo = to_float(row.get("Budget Opbrengsten"))
+    wo = to_float(row.get("Werkelijke opbrengsten"))
+
+    # Als één van de twee ontbreekt → geen warning
+    if bo is None or wo is None:
+        return ""
+
+    # Als het niet gelijk is → warning
+    if bo != wo:
+        return "Opbrengsten niet in orde"
+
+    # Exact gelijk → geen melding
+    return ""
 
 
 # ───────────────────────────────────────────
@@ -125,6 +140,47 @@ def make_proto_prod(row):
     }
 
     return mapping.get(t, "")
+
+# ───────────────────────────────────────────
+# TIER 1
+# ───────────────────────────────────────────
+def make_tier1(row):
+    sluiten = str(row.get("Sluiten", "")).strip().lower()
+    informatie = str(row.get("Informatie", "")).strip()
+    warning = str(row.get("Warning", "")).strip()
+
+    cond1 = sluiten == "ja"
+    cond2 = informatie == "• Gesloten SO, project sluiten na goedkeuring"
+    cond3 = warning == ""
+
+    return cond1 and cond2 and cond3
+
+# ───────────────────────────────────────────
+# TIER 2
+# ───────────────────────────────────────────
+def make_tier2(row):
+    sluiten = str(row.get("Sluiten", "")).strip().lower()
+    informatie = str(row.get("Informatie", "")).strip()
+    warning = str(row.get("Warning", "")).strip()
+
+    cond1 = sluiten == "ja"
+    cond2 = informatie == "• Gesloten SO, project sluiten na goedkeuring"
+    cond3 = warning != ""   # << verschil met Tier 1
+
+    return cond1 and cond2 and cond3
+
+# ───────────────────────────────────────────
+# TIER 3
+# ───────────────────────────────────────────
+# ───────────────────────────────────────────
+# TIER 3  (EXACT 1 van de 2 voorwaarden)
+# ───────────────────────────────────────────
+def make_tier3(row):
+    sluiten = str(row.get("Sluiten", "")).strip().lower() == "ja"
+    informatie = str(row.get("Informatie", "")).strip() == "• Gesloten SO, project sluiten na goedkeuring"
+
+    # XOR: precies één True
+    return sluiten ^ informatie      # dit betekent: True als eentje True is en de andere False
 
 
 # ───────────────────────────────────────────
@@ -185,8 +241,14 @@ def main():
     df["Actiepunten Projectleider"] = df.apply(lambda r: make_actions_projectleider(r, today), axis=1)
     df["Bespreekpunten"] = df.apply(make_bespreekpunten, axis=1)
     df["Informatie"] = df.apply(make_informatie, axis=1)
+    df["Warning"] = df.apply(make_warning, axis=1)
     df["Actiepunten Elders"] = df.apply(make_actiepunten_elders, axis=1)
     df["Proto/Prod"] = df.apply(make_proto_prod, axis=1)
+    df["Tier 1"] = df.apply(make_tier1, axis=1)
+    df["Tier 2"] = df.apply(make_tier2, axis=1)
+    df["Tier 3"] = df.apply(make_tier3, axis=1)
+
+
 
     wb = load_workbook(path)
     ws = wb["Overzicht"]
@@ -211,6 +273,35 @@ def main():
         col_letters["Proto/Prod"] = ws.cell(row=1, column=last).column_letter
         ws.column_dimensions[col_letters["Proto/Prod"]].width = 12
 
+        # Voeg Warning toe indien nodig
+    if "Warning" not in col_letters:
+        last = ws.max_column + 1
+        ws.cell(row=1, column=last).value = "Warning"
+        col_letters["Warning"] = ws.cell(row=1, column=last).column_letter
+        ws.column_dimensions[col_letters["Warning"]].width = 30
+    
+    # Voeg Tier 1 toe indien nodig
+    if "Tier 1" not in col_letters:
+        last = ws.max_column + 1
+        ws.cell(row=1, column=last).value = "Tier 1"
+        col_letters["Tier 1"] = ws.cell(row=1, column=last).column_letter
+        ws.column_dimensions[col_letters["Tier 1"]].width = 12
+
+    # Voeg Tier 2 toe indien nodig
+    if "Tier 2" not in col_letters:
+        last = ws.max_column + 1
+        ws.cell(row=1, column=last).value = "Tier 2"
+        col_letters["Tier 2"] = ws.cell(row=1, column=last).column_letter
+        ws.column_dimensions[col_letters["Tier 2"]].width = 12
+
+    # Voeg Tier 3 toe indien nodig
+    if "Tier 3" not in col_letters:
+        last = ws.max_column + 1
+        ws.cell(row=1, column=last).value = "Tier 3"
+        col_letters["Tier 3"] = ws.cell(row=1, column=last).column_letter
+        ws.column_dimensions[col_letters["Tier 3"]].width = 12
+
+
     # WEGSCHRIJVEN VAN ALLE KOLLOMMEN
     def write_column(name):
         if name in col_letters:
@@ -222,11 +313,18 @@ def main():
     write_column("Actiepunten Projectleider")
     write_column("Bespreekpunten")
     write_column("Informatie")
+    write_column("Warning") 
     write_column("Actiepunten Elders")
     write_column("Proto/Prod")
+    write_column("Tier 1")
+    write_column("Tier 2")
+    write_column("Tier 3")
+
+
 
     # ZET INFORMATIE OP BREEDTE 50
     ws.column_dimensions[col_letters["Informatie"]].width = 50
+    ws.column_dimensions[col_letters["Warning"]].width = 50
 
     wb.save(path)
     print(f"\n  Script afgerond — gegevens opgeslagen in: {os.path.basename(path)}\n")
