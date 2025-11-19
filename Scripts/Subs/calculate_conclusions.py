@@ -15,7 +15,30 @@ OUTPUT_FILE = (
 # ───────────────────────────────────────────
 # ACTIEPUNTEN PROJECTLEIDER
 # ───────────────────────────────────────────
+def is_closed_verkooporder(row) -> bool:
+    """Verkooporder wordt als gesloten gezien als:
+    - Sluiten == 'Ja', of
+    - bij één van de kolommen Openstaande bestelling / SO / PO iets ingevuld is
+      (Ja, Nee, wat dan ook).
+    """
+    sluiten = str(row.get("Sluiten", "")).strip().lower()
+    if sluiten == "ja":
+        return True
+
+    for col in ["Openstaande bestelling", "Openstaande SO", "Openstaande PO"]:
+        val = row.get(col, "")
+        if pd.notna(val) and str(val).strip() != "":
+            return True
+
+    return False
+
+
+
 def make_actions_projectleider(row, today):
+    # Als verkooporder gesloten is → geen actiepunten meer voor PL
+    if is_closed_verkooporder(row):
+        return ""
+
     bullets = []
     ed_ts = pd.to_datetime(row.get("Einddatum"), errors="coerce")
     if pd.notna(ed_ts) and today > ed_ts.date():
@@ -40,6 +63,7 @@ def make_actions_projectleider(row, today):
         pass
 
     return "\n".join(bullets)
+
 
 
 # ───────────────────────────────────────────

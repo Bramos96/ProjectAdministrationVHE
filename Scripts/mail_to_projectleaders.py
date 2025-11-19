@@ -13,6 +13,11 @@ EMAILMAP_SHEET  = "Sheet1"
 OVERVIEW_SHEET  = "Overzicht"
 TESTMODE        = False  # Alles naar jezelf, maar ontvanger-whitelist blijft verplicht en e-mail moet geldig zijn
 SIGNATURE_NAME  = "Bram Gerrits.htm"
+REWORD_MAP = {
+    "einddatum": "Einddatum verlopen, graag een nieuwe leverdatum doorgeven.",
+    "leverdatum": "Leverdatum verlopen, graag een nieuwe leverdatum doorgeven.",
+}
+
 # ───────────────────────────────────────────────────────────
 
 def find_latest_overview(folder):
@@ -54,9 +59,11 @@ BLOCKED_PL_PHRASES = [
     "budget opbrengsten",  # dekt ook "budget opbrengsten toevoegen"
 ]
 
+
 def filter_actiepunten_tekst(txt: str, blocked=BLOCKED_PL_PHRASES) -> str:
     """
     Verwijdert regels die een van de geblokkeerde (deel)zinnen bevatten (case-insensitive).
+    Herschrijft bekende korte codes (Einddatum/Leverdatum verlopen) naar duidelijkere tekst.
     Retourneert de samengevoegde tekst met \n, of '' als alles wegvalt.
     """
     if not isinstance(txt, str) or not txt.strip():
@@ -65,11 +72,22 @@ def filter_actiepunten_tekst(txt: str, blocked=BLOCKED_PL_PHRASES) -> str:
     keep = []
     for l in lines:
         low = l.lower()
+        # 1) blokkeren op keywords
         if any(b in low for b in blocked):
             continue
-        if l.strip():
-            keep.append(l)
+
+        mapped = l
+        for key, new in REWORD_MAP.items():
+            if key.lower() in low:  # low = l.lower()
+                    mapped = f"• {new}"
+                    break
+
+
+        if mapped.strip():
+            keep.append(mapped)
+
     return "\n".join(keep).strip()
+
 
 # Mapping van actiepunt → ontvangernaam (zoals die in je Projectleiders.xlsx staat)
 RECIPIENT_BY_PHRASE = {
@@ -90,6 +108,8 @@ required_cols = ["Projectnummer", "Projectleider", "Actiepunten Projectleider", 
 missing = [c for c in required_cols if c not in df.columns]
 if missing:
     raise ValueError(f"Ontbrekende kolommen in '{OVERVIEW_SHEET}': {missing}")
+
+
 
 # ── Project-niveau Whitelist (kolom in Overzicht) ─────────────────────
 # Als kolom "Whitelist" bestaat en NIET leeg is -> project niet mailen
@@ -127,6 +147,12 @@ df_emails["Email"] = df_emails["Email"].astype(str).str.strip()
 # Lege/ongeldige adressen expliciet leeg laten
 df_emails.loc[df_emails["Email"].str.lower().isin({"", "nan", "none"}), "Email"] = ""
 
+if "Timestamp" not in df_emails.columns:
+        df_emails["Timestamp"] = pd.NaT
+else:
+        df_emails["Timestamp"] = pd.to_datetime(df_emails["Timestamp"], errors="coerce")
+
+
 # Ontvanger-niveau whitelist: bepaalt of een persoon überhaupt mails mag ontvangen
 if "Whitelist" in df_emails.columns:
     df_emails["Whitelist"] = df_emails["Whitelist"].map(to_bool)
@@ -134,6 +160,7 @@ else:
     df_emails["Whitelist"] = False  # streng: alleen expliciet TRUE mag mailen
 
 email_map     = dict(zip(df_emails["Naam"], df_emails["Email"]))
+timestamp_map = dict(zip(df_emails["Naam"], df_emails["Timestamp"]))
 whitelist_map = dict(zip(df_emails["Naam"], df_emails["Whitelist"]))
 
 def get_email(name: str) -> str:
@@ -175,6 +202,20 @@ test_tag = "[TEST] " if TESTMODE else ""
 
 # 5) Mails: Projectleiders
 for leider, sub in df_pl.groupby("Projectleider"):
+
+    # ── Anti-spam check (max 1 mail per dag per persoon) ──
+    last_sent = timestamp_map.get(leider)
+    today = pd.Timestamp.now().normalize()
+
+    if pd.notna(last_sent) and last_sent.normalize() >= today:
+        print(f"⛔ {leider} vandaag al gemaild ({last_sent.date()}) – overslaan")
+        continue
+
+    # Ontvanger-whitelist verplicht
+    if not whitelist_map.get(leider, False):
+        print(f"⛔ Ontvanger niet op whitelist (Projectleiders.xlsx): {leider} – mail overgeslagen")
+        continue
+
     # Ontvanger-whitelist verplicht (óók in TESTMODE)
     if not whitelist_map.get(leider, False):
         print(f"⛔ Ontvanger niet op whitelist (Projectleiders.xlsx): {leider} – mail overgeslagen")
@@ -235,6 +276,11 @@ for leider, sub in df_pl.groupby("Projectleider"):
 
     print(f"✅ Mail klaargezet voor: {leider} → {to_address} (projecten in mail: {projecten_in_mail})")
     mail_count += 1
+        # Timestamp bijwerken in df_emails (anti-spam)
+    today = pd.Timestamp.now().normalize()
+    df_emails.loc[df_emails["Naam"] == leider, "Timestamp"] = today
+
+
 
 # 6) Mails: Actiepunten Elders (per ontvanger, PER PROJECTNUMMER)
 for recipient_name, items in elders_bucket.items():
@@ -294,5 +340,27 @@ for recipient_name, items in elders_bucket.items():
 
     print(f"✅ Mail (Elders) klaargezet voor: {recipient_name} → {to_address} (projecten in mail: {len(per_project)})")
     mail_count += 1
+
+# Wijzigingen in Timestamp terugschrijven naar Projectleiders.xlsx
+with pd.ExcelWriter(EMAILMAP_FILE, engine="openpyxl", mode="a", if_sheet_exists="replace") as writer:
+    df_emails.to_excel(writer, sheet_name=EMAILMAP_SHEET, index=False)
+
+# ── Timestamp terugschrijven naar Projectleiders.xlsx ──
+df_emails.to_excel(EMAILMAP_FILE, sheet_name=EMAILMAP_SHEET, index=False)
+
+# ── Kolombreedtes aanpassen naar 30 ──
+from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
+
+wb_pl = load_workbook(EMAILMAP_FILE)
+ws_pl = wb_pl[EMAILMAP_SHEET]
+
+for col in range(1, ws_pl.max_column + 1):
+    ws_pl.column_dimensions[get_column_letter(col)].width = 30
+
+wb_pl.save(EMAILMAP_FILE)
+print("📏 Kolombreedte Projectleiders.xlsx ingesteld op 30.")
+
+
 
 print(f"\n📬 Totaal {mail_count} mails klaargezet.")
