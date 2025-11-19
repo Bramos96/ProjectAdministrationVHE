@@ -14,7 +14,8 @@ SYNC_COLUMNS = [
     "Verwacht resultaat",     # Gets value from "Aangepast resultaat" if not empty
     "Actiepunten Bram",
     "2e Projectleider",
-    "Sluiten"
+    "Sluiten",
+    "Whitelist"
 ]
 
 MANUAL_INPUT_COLUMN = "Aangepast resultaat"

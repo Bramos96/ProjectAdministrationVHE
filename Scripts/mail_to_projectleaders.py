@@ -7,23 +7,26 @@ import win32com.client as win32
 from collections import defaultdict
 
 # ───────────────────────────────────────────────────────────
-OUTPUT_FOLDER = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output"
-EMAILMAP_FILE = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Projectleiders.xlsx"
-EMAILMAP_SHEET = "Sheet1"
-OVERVIEW_SHEET = "Overzicht"
-TESTMODE = False  # Alles naar jezelf, maar whitelist blijft verplicht en e-mail moet geldig zijn
-SIGNATURE_NAME = "Bram Gerrits.htm"
+OUTPUT_FOLDER   = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output"
+EMAILMAP_FILE   = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Projectleiders.xlsx"
+EMAILMAP_SHEET  = "Sheet1"
+OVERVIEW_SHEET  = "Overzicht"
+TESTMODE        = False  # Alles naar jezelf, maar ontvanger-whitelist blijft verplicht en e-mail moet geldig zijn
+SIGNATURE_NAME  = "Bram Gerrits.htm"
 # ───────────────────────────────────────────────────────────
 
 def find_latest_overview(folder):
-    files = [f for f in os.listdir(folder) if f.startswith("Overzicht_Projectadministratie_Week") and f.endswith(".xlsx")]
+    files = [
+        f for f in os.listdir(folder)
+        if f.startswith("Overzicht_Projectadministratie_Week") and f.endswith(".xlsx")
+    ]
     if not files:
         raise FileNotFoundError(f"Geen Overzicht-bestanden gevonden in: {folder}")
     files.sort(key=lambda x: os.path.getmtime(os.path.join(folder, x)), reverse=True)
     return os.path.join(folder, files[0])
 
 def get_signature_html():
-    sig_path = os.path.join(os.environ.get("APPDATA",""), "Microsoft", "Signatures", SIGNATURE_NAME)
+    sig_path = os.path.join(os.environ.get("APPDATA", ""), "Microsoft", "Signatures", SIGNATURE_NAME)
     if os.path.exists(sig_path):
         with open(sig_path, encoding="utf-8") as f:
             return f.read()
@@ -32,13 +35,13 @@ def get_signature_html():
 
 def to_bool(x) -> bool:
     s = str(x).strip().lower()
-    return s in {"true","1","ja","yes","y","waar","ok","oké","x"}
+    return s in {"true", "1", "ja", "yes", "y", "waar", "ok", "oké", "x"}
 
 def norm_txt(s: str) -> str:
     if not isinstance(s, str):
         return ""
-    s = s.replace("\u00A0", " ")                # harde spaties
-    s = s.replace("–", "-").replace("—", "-")   # en/em dash -> hyphen
+    s = s.replace("\u00A0", " ")  # harde spaties
+    s = s.replace("–", "-").replace("—", "-")  # en/em dash -> hyphen
     s = re.sub(r"\s+", " ", s)
     return s.strip().lower()
 
@@ -73,12 +76,13 @@ RECIPIENT_BY_PHRASE = {
     "Gesloten SO met openstaande bestelling": "Inkoop",
     "Gesloten SO met openstaande PO - Prod": "Judith",
     "Gesloten SO met openstaande PO - Proto": "Inkoop",
-    
 }
 RECIPIENT_BY_PHRASE_NORM = {norm_txt(k): v for k, v in RECIPIENT_BY_PHRASE.items()}
 
 # 1) Laad Overzicht
 overview_path = find_latest_overview(OUTPUT_FOLDER)
+print(f"📄 Gebruik Overzicht-bestand: {os.path.basename(overview_path)}")
+
 df = pd.read_excel(overview_path, sheet_name=OVERVIEW_SHEET, header=0)
 df.columns = df.columns.str.strip()
 
@@ -87,10 +91,32 @@ missing = [c for c in required_cols if c not in df.columns]
 if missing:
     raise ValueError(f"Ontbrekende kolommen in '{OVERVIEW_SHEET}': {missing}")
 
-df = df[required_cols]
-df_pl = df.dropna(subset=["Projectleider"]).copy()  # filter alleen voor PL-mails
+# ── Project-niveau Whitelist (kolom in Overzicht) ─────────────────────
+# Als kolom "Whitelist" bestaat en NIET leeg is -> project niet mailen
+if "Whitelist" in df.columns:
+    df["Whitelist_flag"] = df["Whitelist"].notna() & (df["Whitelist"].astype(str).str.strip() != "")
+else:
+    df["Whitelist_flag"] = False
 
-# 2) Laad e-mailmapping (+ whitelist)
+total_projects = len(df)
+total_whitelisted_projects = int(df["Whitelist_flag"].sum())
+print(f"📊 Totaal projecten in overzicht: {total_projects}")
+print(f"📊 Projecten met Whitelist gevuld (project niet mailen): {total_whitelisted_projects}")
+
+df = df[required_cols + ["Whitelist_flag"]]
+
+# Voor PL-mails: eerst alle regels met Projectleider, daarna filteren op project-whitelist
+df_pl_full = df.dropna(subset=["Projectleider"]).copy()
+pl_rows_before = len(df_pl_full)
+pl_rows_whitelisted = int(df_pl_full["Whitelist_flag"].sum())
+df_pl = df_pl_full[~df_pl_full["Whitelist_flag"]].copy()
+pl_rows_after = len(df_pl)
+
+print(f"📊 PL-regels totaal: {pl_rows_before}")
+print(f"📊 PL-regels met Whitelist (geskipt): {pl_rows_whitelisted}")
+print(f"📊 PL-regels na project-whitelist-filter: {pl_rows_after}")
+
+# 2) Laad e-mailmapping (+ ontvanger-whitelist)
 df_emails = pd.read_excel(EMAILMAP_FILE, sheet_name=EMAILMAP_SHEET)
 df_emails.columns = df_emails.columns.str.strip()
 if "Naam" not in df_emails.columns or "Email" not in df_emails.columns:
@@ -101,6 +127,7 @@ df_emails["Email"] = df_emails["Email"].astype(str).str.strip()
 # Lege/ongeldige adressen expliciet leeg laten
 df_emails.loc[df_emails["Email"].str.lower().isin({"", "nan", "none"}), "Email"] = ""
 
+# Ontvanger-niveau whitelist: bepaalt of een persoon überhaupt mails mag ontvangen
 if "Whitelist" in df_emails.columns:
     df_emails["Whitelist"] = df_emails["Whitelist"].map(to_bool)
 else:
@@ -113,9 +140,16 @@ def get_email(name: str) -> str:
     addr = (email_map.get(name) or "").strip()
     return addr if is_valid_email(addr) else ""
 
-# 3) Vul elders-bucket (niet filteren op Projectleider)
+# 3) Vul elders-bucket (niet filteren op Projectleider, wél op project-whitelist)
 elders_bucket = defaultdict(list)  # ontvanger -> list[(Projectnummer, Actiepunt)]
+elders_whitelist_skipped = 0
+
 for _, r in df.iterrows():
+    # Projecten met Whitelist_flag = True overslaan voor "Elders"
+    if r.get("Whitelist_flag", False):
+        elders_whitelist_skipped += 1
+        continue
+
     txt_norm = norm_txt(r.get("Actiepunten Elders", ""))
     if not txt_norm:
         continue
@@ -124,6 +158,8 @@ for _, r in df.iterrows():
             # Bewaar de originele, nette phrase voor weergave
             original_phrase = [k for k in RECIPIENT_BY_PHRASE if norm_txt(k) == phrase_norm][0]
             elders_bucket[recipient].append((r["Projectnummer"], original_phrase))
+
+print(f"📊 Elders-regels geskipt door project-whitelist: {elders_whitelist_skipped}")
 
 # 4) Handtekening + Outlook
 signature_html = get_signature_html()
@@ -139,9 +175,9 @@ test_tag = "[TEST] " if TESTMODE else ""
 
 # 5) Mails: Projectleiders
 for leider, sub in df_pl.groupby("Projectleider"):
-    # Whitelist verplicht (óók in TESTMODE)
+    # Ontvanger-whitelist verplicht (óók in TESTMODE)
     if not whitelist_map.get(leider, False):
-        print(f"⛔ Niet op whitelist: {leider} – mail overgeslagen")
+        print(f"⛔ Ontvanger niet op whitelist (Projectleiders.xlsx): {leider} – mail overgeslagen")
         continue
     # Geldig e-mailadres verplicht
     real_addr = get_email(leider)
@@ -152,10 +188,12 @@ for leider, sub in df_pl.groupby("Projectleider"):
     # Filter lege actiepunten + blokkeerregels
     sub = sub.dropna(subset=["Actiepunten Projectleider"]).copy()
     if sub.empty:
+        print(f"ℹ️ Geen actiepunten (na NaN-filter) voor: {leider}")
         continue
 
     # HTML-tabel opbouwen met filtering
     table_rows = ""
+    projecten_in_mail = 0
     for _, row in sub.iterrows():
         filtered_txt = filter_actiepunten_tekst(row.get("Actiepunten Projectleider", ""))
         if not filtered_txt:
@@ -167,8 +205,10 @@ for leider, sub in df_pl.groupby("Projectleider"):
             f"<td style='text-align:left;'>{actiepunten_html}</td>"
             f"</tr>"
         )
+        projecten_in_mail += 1
 
     if not table_rows:
+        print(f"ℹ️ Na filtering van actiepunten blijft er niets over voor: {leider}")
         continue  # niets te communiceren na filter
 
     html_body = f"""
@@ -193,21 +233,21 @@ for leider, sub in df_pl.groupby("Projectleider"):
     mail.HTMLBody = html_body
     mail.Display()
 
-    print(f"✅ Mail klaargezet voor: {leider} → {to_address}")
+    print(f"✅ Mail klaargezet voor: {leider} → {to_address} (projecten in mail: {projecten_in_mail})")
     mail_count += 1
 
 # 6) Mails: Actiepunten Elders (per ontvanger, PER PROJECTNUMMER)
 for recipient_name, items in elders_bucket.items():
     if not items:
         continue
-    # Whitelist verplicht
+    # Ontvanger-whitelist verplicht
     if not whitelist_map.get(recipient_name, False):
-        print(f"⛔ Niet op whitelist: {recipient_name} – mail overgeslagen")
+        print(f"⛔ Ontvanger (Elders) niet op whitelist: {recipient_name} – mail overgeslagen")
         continue
     # Geldig e-mailadres verplicht
     real_addr = get_email(recipient_name)
     if not real_addr:
-        print(f"⛔ Geen geldig e-mailadres voor: {recipient_name} – mail overgeslagen")
+        print(f"⛔ Geen geldig e-mailadres voor (Elders): {recipient_name} – mail overgeslagen")
         continue
 
     # Per projectnummer de lijst met actiepunten (dedup + sort)
@@ -223,7 +263,12 @@ for recipient_name, items in elders_bucket.items():
     table_rows = ""
     for proj in sorted(per_project, key=lambda x: str(x)):
         acties_html = "<br>".join(per_project[proj])
-        table_rows += f"<tr><td style='text-align:left;'>{proj}</td><td style='text-align:left;'>{acties_html}</td></tr>"
+        table_rows += (
+            f"<tr>"
+            f"<td style='text-align:left;'>{proj}</td>"
+            f"<td style='text-align:left;'>{acties_html}</td>"
+            f"</tr>"
+        )
 
     html_body_elders = f"""
     <p>Hallo {recipient_name},</p>
@@ -247,7 +292,7 @@ for recipient_name, items in elders_bucket.items():
     mail.HTMLBody = html_body_elders
     mail.Display()
 
-    print(f"✅ Mail (Elders) klaargezet voor: {recipient_name} → {to_address}")
+    print(f"✅ Mail (Elders) klaargezet voor: {recipient_name} → {to_address} (projecten in mail: {len(per_project)})")
     mail_count += 1
 
 print(f"\n📬 Totaal {mail_count} mails klaargezet.")

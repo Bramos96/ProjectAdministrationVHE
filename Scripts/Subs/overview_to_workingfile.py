@@ -359,6 +359,7 @@ for col in [
     "Actiepunten Elders",        
     "Resultaat gewijzigd",
     "Sluiten",
+    "Whitelist"
 ]:
     header_map.setdefault(col, col)
 
@@ -420,7 +421,7 @@ thin_grey = Border(
 )
 
 # Editable inputs (no fill + thin borders)
-editable_cols = {"Aangepast resultaat", "Algemene informatie", "Actiepunten Bram", "2e Projectleider", "Sluiten"}
+editable_cols = {"Aangepast resultaat", "Algemene informatie", "Actiepunten Bram", "2e Projectleider", "Sluiten", "Whitelist"}
 
 
 # 9) Write data rows (starting at row 3) with manual/auto logic for VR/AR
