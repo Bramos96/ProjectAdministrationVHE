@@ -91,7 +91,26 @@ def make_bespreekpunten(row):
     if is_yes(val_so):
         bullets.append("• Gesloten SO, maar openstaande SO dochterproject")
 
+    # 3) Kunnen we sluiten?
+    warning_txt = str(row.get("Warning", "")).strip()
+
+    cols_sc = ["Openstaande bestelling", "Openstaande SO", "Openstaande PO"]
+    vals_sc = []
+    for c in cols_sc:
+        v = row.get(c)
+        if pd.isna(v):
+            vals_sc.append("")          # echte leegtes → echt leeg
+        else:
+            vals_sc.append(str(v).strip())
+
+    any_filled = any(v != "" for v in vals_sc)
+
+    if warning_txt == "" and any_filled:
+        bullets.append("• Kunnen we deze sluiten?")
+
     return "\n".join(bullets)
+
+
 
 
 # ───────────────────────────────────────────
@@ -263,9 +282,9 @@ def main():
 
     # BEREKEN KOLLOMMEN
     df["Actiepunten Projectleider"] = df.apply(lambda r: make_actions_projectleider(r, today), axis=1)
-    df["Bespreekpunten"] = df.apply(make_bespreekpunten, axis=1)
     df["Informatie"] = df.apply(make_informatie, axis=1)
     df["Warning"] = df.apply(make_warning, axis=1)
+    df["Bespreekpunten"] = df.apply(make_bespreekpunten, axis=1)
     df["Actiepunten Elders"] = df.apply(make_actiepunten_elders, axis=1)
     df["Proto/Prod"] = df.apply(make_proto_prod, axis=1)
     df["Tier 1"] = df.apply(make_tier1, axis=1)

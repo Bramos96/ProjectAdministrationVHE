@@ -104,7 +104,15 @@ print(f"📄 Gebruik Overzicht-bestand: {os.path.basename(overview_path)}")
 df = pd.read_excel(overview_path, sheet_name=OVERVIEW_SHEET, header=0)
 df.columns = df.columns.str.strip()
 
-required_cols = ["Projectnummer", "Projectleider", "Actiepunten Projectleider", "Actiepunten Elders"]
+required_cols = [
+    "Projectnummer",
+    "Projectleider",
+    "Klant",
+    "Omschrijving",
+    "Actiepunten Projectleider",
+    "Actiepunten Elders",
+]
+
 missing = [c for c in required_cols if c not in df.columns]
 if missing:
     raise ValueError(f"Ontbrekende kolommen in '{OVERVIEW_SHEET}': {missing}")
@@ -239,14 +247,22 @@ for leider, sub in df_pl.groupby("Projectleider"):
         filtered_txt = filter_actiepunten_tekst(row.get("Actiepunten Projectleider", ""))
         if not filtered_txt:
             continue  # alle regels geblokkeerd -> project overslaan
+
         actiepunten_html = html.escape(filtered_txt).replace("\n", "<br>")
+        klant = html.escape(str(row.get("Klant", "")))
+        omschrijving = html.escape(str(row.get("Omschrijving", "")))
+
         table_rows += (
             f"<tr>"
             f"<td style='text-align:left;'>{row['Projectnummer']}</td>"
+            f"<td style='text-align:left;'>{klant}</td>"
+            f"<td style='text-align:left;'>{omschrijving}</td>"
             f"<td style='text-align:left;'>{actiepunten_html}</td>"
             f"</tr>"
-        )
-        projecten_in_mail += 1
+    )
+    projecten_in_mail += 1
+
+
 
     if not table_rows:
         print(f"ℹ️ Na filtering van actiepunten blijft er niets over voor: {leider}")
@@ -257,8 +273,10 @@ for leider, sub in df_pl.groupby("Projectleider"):
     <p>Zou je onderstaande punt(en) kunnen oppakken voor de projecten die aan jouw naam gekoppeld zijn?</p>
     <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
         <tr style="background-color:#4F81BD;color:white;">
-            <th style="width: 150px; text-align:left;">Projectnummer</th>
-            <th style="width: 300px; text-align:left;">Actiepunten</th>
+                <th style="width: 150px; text-align:left;">Projectnummer</th>
+                <th style="width: 200px; text-align:left;">Klant</th>
+                <th style="width: 300px; text-align:left;">Omschrijving</th>
+                <th style="width: 300px; text-align:left;">Actiepunten</th>
         </tr>
         {table_rows}
     </table>
@@ -319,13 +337,16 @@ for recipient_name, items in elders_bucket.items():
     html_body_elders = f"""
     <p>Hallo {recipient_name},</p>
     <p>Zou je onderstaande punt(en) kunnen oppakken voor de projecten die aan jouw naam gekoppeld zijn?:</p>
-    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
-        <tr style="background-color:#4F81BD;color:white;">
+        <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
+            <tr style="background-color:#4F81BD;color:white;">
+            <th style="width: 200px; text-align:left;">Klant</th>
+            <th style="width: 300px; text-align:left;">Omschrijving</th>
             <th style="width: 150px; text-align:left;">Projectnummer</th>
             <th style="width: 300px; text-align:left;">Actiepunten</th>
         </tr>
         {table_rows}
     </table>
+
     <p>Mocht je nog vragen hebben, laat het gerust weten. <br><br>Alvast bedankt voor je hulp! </p>
     {signature_html}
     """
