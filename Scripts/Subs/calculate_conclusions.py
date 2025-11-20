@@ -185,45 +185,60 @@ def make_proto_prod(row):
     return mapping.get(t, "")
 
 # ───────────────────────────────────────────
-# TIER 1
+# TIERS OP BASIS VAN 5 CHECKS
 # ───────────────────────────────────────────
+
+def _tier_checks_count(row) -> int:
+    """Geef terug hoeveel van de 4 checks zijn behaald."""
+
+    # Check 1: Verkooporder gesloten indicator
+    cols_closed = ["Openstaande bestelling", "Openstaande SO", "Openstaande PO"]
+    closed_indicator = False
+    for c in cols_closed:
+        v = row.get(c)
+        if pd.isna(v):
+            continue
+        s = str(v).strip()
+        if s != "":
+            closed_indicator = True
+            break
+
+    # Check 2: Warning moet leeg zijn (geen tekst)
+    v_warning = row.get("Warning", "")
+    if pd.isna(v_warning):
+        warning_empty = True
+    else:
+        warning_empty = str(v_warning).strip() == ""
+
+    # Check 3: Sluiten moet 'ja' zijn
+    sluiten_val = str(row.get("Sluiten", "")).strip().lower()
+    sluiten_ok = (sluiten_val == "ja")
+
+    # Check 4: Actiepunten Bram moet leeg zijn
+    v_bram = row.get("Actiepunten Bram", "")
+    if pd.isna(v_bram):
+        bram_empty = True
+    else:
+        bram_empty = str(v_bram).strip() == ""
+
+    checks = [closed_indicator, warning_empty, sluiten_ok, bram_empty]
+    return sum(1 for ok in checks if ok)
+
+
 def make_tier1(row):
-    sluiten = str(row.get("Sluiten", "")).strip().lower()
-    informatie = str(row.get("Informatie", "")).strip()
-    warning = str(row.get("Warning", "")).strip()
+    return _tier_checks_count(row) == 4
 
-    cond1 = sluiten == "ja"
-    cond2 = informatie == "• Gesloten SO, project sluiten na goedkeuring"
-    cond3 = warning == ""
-
-    return cond1 and cond2 and cond3
-
-# ───────────────────────────────────────────
-# TIER 2
-# ───────────────────────────────────────────
 def make_tier2(row):
-    sluiten = str(row.get("Sluiten", "")).strip().lower()
-    informatie = str(row.get("Informatie", "")).strip()
-    warning = str(row.get("Warning", "")).strip()
+    return _tier_checks_count(row) == 3
 
-    cond1 = sluiten == "ja"
-    cond2 = informatie == "• Gesloten SO, project sluiten na goedkeuring"
-    cond3 = warning != ""   # << verschil met Tier 1
-
-    return cond1 and cond2 and cond3
-
-# ───────────────────────────────────────────
-# TIER 3
-# ───────────────────────────────────────────
-# ───────────────────────────────────────────
-# TIER 3  (EXACT 1 van de 2 voorwaarden)
-# ───────────────────────────────────────────
 def make_tier3(row):
-    sluiten = str(row.get("Sluiten", "")).strip().lower() == "ja"
-    informatie = str(row.get("Informatie", "")).strip() == "• Gesloten SO, project sluiten na goedkeuring"
+    return _tier_checks_count(row) == 2
 
-    # XOR: precies één True
-    return sluiten ^ informatie      # dit betekent: True als eentje True is en de andere False
+def make_tier4(row):
+    return _tier_checks_count(row) == 1
+
+def make_tier5(row):
+    return _tier_checks_count(row) == 0
 
 
 # ───────────────────────────────────────────
@@ -290,6 +305,13 @@ def main():
     df["Tier 1"] = df.apply(make_tier1, axis=1)
     df["Tier 2"] = df.apply(make_tier2, axis=1)
     df["Tier 3"] = df.apply(make_tier3, axis=1)
+    df["Tier 4"] = df.apply(make_tier4, axis=1)
+    df["Tier 5"] = df.apply(make_tier5, axis=1)
+
+    # Convert booleans to 0/1 for Power BI compatibility
+    for col in ["Tier 1", "Tier 2", "Tier 3", "Tier 4", "Tier 5"]:
+        df[col] = df[col].astype(int)
+
 
 
 
@@ -344,14 +366,38 @@ def main():
         col_letters["Tier 3"] = ws.cell(row=1, column=last).column_letter
         ws.column_dimensions[col_letters["Tier 3"]].width = 12
 
+    # Voeg Tier 4 toe indien nodig
+    if "Tier 4" not in col_letters:
+        last = ws.max_column + 1
+        ws.cell(row=1, column=last).value = "Tier 4"
+        col_letters["Tier 4"] = ws.cell(row=1, column=last).column_letter
+        ws.column_dimensions[col_letters["Tier 4"]].width = 12
+
+# Voeg Tier 5 toe indien nodig
+    if "Tier 5" not in col_letters:
+        last = ws.max_column + 1
+        ws.cell(row=1, column=last).value = "Tier 5"
+        col_letters["Tier 5"] = ws.cell(row=1, column=last).column_letter
+        ws.column_dimensions[col_letters["Tier 5"]].width = 12
 
     # WEGSCHRIJVEN VAN ALLE KOLLOMMEN
     def write_column(name):
         if name in col_letters:
             col = col_letters[name]
             for idx, val in enumerate(df[name], start=2):
-                ws[f"{col}{idx}"].value = val or None
+
+                # Voor Tier-kolommen: True/False → 1/0
+                if name.startswith("Tier "):
+                    if pd.isna(val):
+                        cell_value = None
+                    else:
+                        cell_value = int(bool(val))  # True -> 1, False -> 0
+                else:
+                    cell_value = val  # alles zoals het was
+
+                ws[f"{col}{idx}"].value = cell_value
                 ws[f"{col}{idx}"].alignment = Alignment(wrap_text=True)
+
 
     write_column("Actiepunten Projectleider")
     write_column("Bespreekpunten")
@@ -362,6 +408,8 @@ def main():
     write_column("Tier 1")
     write_column("Tier 2")
     write_column("Tier 3")
+    write_column("Tier 4")
+    write_column("Tier 5")
 
 
 

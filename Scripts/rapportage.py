@@ -62,6 +62,22 @@ def write_snapshot(df_central: pd.DataFrame) -> None:
     conn.close()
     print(f"{len(df_snap)} regels opgeslagen in 'project_snapshots_full'.")
 
+TIER_COLS = [f"Tier {i}" for i in range(1, 6)]
+
+def prepare_tier_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Zorgt dat Tier 1 t/m Tier 5 altijd bestaan en in 0/1-formaat staan.
+    """
+    # Columns aanmaken als ze nog niet bestaan
+    for col in TIER_COLS:
+        if col not in df.columns:
+            df[col] = False
+
+    # Alles naar 0/1 (int) omzetten
+    for col in TIER_COLS:
+        df[col] = df[col].fillna(False).astype(int)
+
+    return df
 
 
 def main():
@@ -75,7 +91,7 @@ def main():
     print("💾 Wegschrijven naar database...")
     write_snapshot_to_csv(df)
 
-    print("🎉 Klaar! Snapshot opgeslagen in projectadmin.db")
+    print("🎉 Klaar! Snapshot opgeslagen als CSV.")
 
 def write_snapshot_to_csv(df_central: pd.DataFrame) -> None:
     from datetime import date
