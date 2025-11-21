@@ -128,6 +128,19 @@ overview_path = find_latest_overview(OUTPUT_FOLDER)
 df = pd.read_excel(overview_path, header=0, engine="openpyxl")
 df.columns = df.columns.str.strip()
 
+# ── BUILD LIST OF TIER 1 PROJECTS (Sheet 'Tier1') ──
+TIER1_BASE_COLS = ["Projectnummer", "Projectleider", "Klant", "Omschrijving"]
+
+if "Tier 1" in df.columns:
+    # Neem alle projecten waar Tier 1 niet 0/NaN is
+    tier1_source = df[df["Tier 1"].fillna(0) != 0].copy()
+    to_tier1_df = tier1_source[[c for c in TIER1_BASE_COLS if c in tier1_source.columns]].copy()
+else:
+    # Als de kolom nog niet bestaat → lege lijst
+    to_tier1_df = pd.DataFrame(columns=TIER1_BASE_COLS)
+# ── EINDE TIER 1 LIST ──
+
+
 # ── BUILD LIST OF PROJECTS TO CLOSE ("Afsluiten" tab) ──
 CLOSE_COLS = [
     "Projectnummer",
@@ -365,7 +378,18 @@ for col in [
 
 # 3) Open template workbook
 wb = load_workbook(TEMPLATE_FILE)
-ws = wb.active
+
+def pick_main_sheet(wb):
+    target_header = "Verwacht resultaat"
+    for ws in wb.worksheets:
+        headers = [str(c.value).strip() for c in ws[2] if c.value]
+        if target_header in headers:
+            return ws
+    # fallback: oude gedrag
+    return wb.active
+
+ws = pick_main_sheet(wb)
+
 
 # Remove existing table definitions (if any)
 if hasattr(ws, "_tables"):
@@ -565,118 +589,61 @@ first_col = get_column_letter(min_col)
 last_col  = get_column_letter(max_col)
 ws.auto_filter.ref = f"{first_col}2:{last_col}{total_rows}"
 
-# ── FILL SECOND SHEET ("Afsluiten") WITH to_close_df ──
-SHEET2_NAME = "Sheet2"  # tabnaam in template
+# ── FILL TIER 1 SHEET ("Tier1") WITH to_tier1_df ──
+SHEET_TIER1_NAME = "Tier1"  # tabnaam in je template
 
-if SHEET2_NAME in wb.sheetnames:
-    ws_close = wb[SHEET2_NAME]
+if SHEET_TIER1_NAME in wb.sheetnames:
+    ws_tier = wb[SHEET_TIER1_NAME]
 
-    # We assume:
-    # Row 1 = your blue info bar (keep it exactly as-is)
-    # Row 2 = header row with the actual column labels
-    # Row 3+ = data rows we generate
+    # Aanname:
+    # Row 1 = blauwe info-balk
+    # Row 2 = headers (Projectnummer, Projectleider, Klant, Omschrijving)
+    # Row 3+ = data
+    HEADER_ROW_T = 2
+    START_DATA_ROW_T = 3
 
-    HEADER_ROW = 2
-    START_DATA_ROW = 3
-
-    # 1. Determine target column order based on row 2 headers
-    #    We nemen kolommen mee die in to_close_df zitten,
-    #    plus 'Eindacties' en 'Finale check' zodat we daar later kleur op kunnen zetten.
-    cols_final = []
-    for cell in ws_close[HEADER_ROW]:
+    # 1. Kolomvolgorde bepalen op basis van de headers in rij 2
+    cols_tier = []
+    for cell in ws_tier[HEADER_ROW_T]:
         header_val = cell.value
         if not header_val:
             continue
-        if header_val in to_close_df.columns or header_val in ["Eindacties", "Finale check"]:
-            cols_final.append(header_val)
+        if header_val in to_tier1_df.columns:
+            cols_tier.append(header_val)
 
+    # 2. Oude data leegmaken (waarden wissen, opmaak laten staan)
+    max_rows_t = ws_tier.max_row
+    max_cols_t = ws_tier.max_column
+    for r in range(START_DATA_ROW_T, max_rows_t + 1):
+        for c in range(1, max_cols_t + 1):
+            ws_tier.cell(row=r, column=c).value = None
 
-    # 2. Clear old data rows from START_DATA_ROW downwards (but keep styling in row 1 and 2)
-    max_rows = ws_close.max_row
-    max_cols = ws_close.max_column
-    for r in range(START_DATA_ROW, max_rows + 1):
-        for c in range(1, max_cols + 1):
-            ws_close.cell(row=r, column=c).value = None
+    # 3. Nieuwe data schrijven
+    out_row_t = START_DATA_ROW_T
+    for _, row_vals in to_tier1_df.iterrows():
+        for c_idx, col_name in enumerate(cols_tier, start=1):
+            val = row_vals[col_name] if col_name in to_tier1_df.columns else ""
+            cell = ws_tier.cell(row=out_row_t, column=c_idx, value=val)
+            cell.alignment = Alignment(
+                horizontal="left",
+                vertical="top",
+                wrap_text=True
+            )
+        ws_tier.row_dimensions[out_row_t].height = 20
+        out_row_t += 1
 
-    # 3. Write new data starting at START_DATA_ROW
-    out_row = START_DATA_ROW
-    for _, row_vals in to_close_df.iterrows():
-        for c_idx, col_name in enumerate(cols_final, start=1):
+    # 4. Autofilter + freeze panes
+    if cols_tier:
+        first_col_letter_t = get_column_letter(1)
+        last_col_letter_t = get_column_letter(len(cols_tier))
+        last_data_row_t = out_row_t - 1
+        ws_tier.auto_filter.ref = (
+            f"{first_col_letter_t}{HEADER_ROW_T}:{last_col_letter_t}{last_data_row_t}"
+        )
 
-            # alleen schrijven als deze kolom echt bestaat in to_close_df
-            if col_name in to_close_df.columns:
-                val = row_vals[col_name]
+    ws_tier.freeze_panes = f"A{START_DATA_ROW_T}"
+# ── END TIER 1 SHEET FILL ──
 
-                # multiline cleanup voor langere tekstvelden
-                if col_name in ["Omschrijving", "Actiepunten Bram"] and isinstance(val, str):
-                    parts = [p.strip() for p in val.replace(";", "\n").split("\n") if p.strip()]
-                    val = "\n".join(parts)
-
-                cell = ws_close.cell(row=out_row, column=c_idx, value=val)
-                cell.alignment = Alignment(
-                    horizontal="left",
-                    vertical="top",
-                    wrap_text=True
-                )
-            else:
-                # bv. 'Finale check' staat wel als header in Excel maar niet in to_close_df
-                # -> cel leeg laten, maar wel alignment en rijhoogte consistent houden
-                cell = ws_close.cell(row=out_row, column=c_idx, value=None)
-                cell.alignment = Alignment(
-                    horizontal="left",
-                    vertical="top",
-                    wrap_text=True
-                )
-
-        ws_close.row_dimensions[out_row].height = 40
-        out_row += 1
-
-    # 3b. Color 'Finale check' based on 'Eindacties'
-    from openpyxl.styles import PatternFill
-
-    green_fill = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")   # zacht groen
-    orange_fill = PatternFill(start_color="FFD7B5", end_color="FFD7B5", fill_type="solid") # zacht oranje
-
-    # Zoek kolomindexen voor 'Eindacties' en 'Finale check' in cols_final
-    col_eindacties = None
-    col_finalecheck = None
-    for idx, name in enumerate(cols_final, start=1):
-        if name == "Eindacties":
-            col_eindacties = idx
-        if name == "Finale check":
-            col_finalecheck = idx
-
-    # Alleen kleuren als we een 'Finale check'-kolom in de sheet hebben
-    if col_finalecheck is not None:
-        # Data rows lopen van START_DATA_ROW t/m out_row-1
-        for r in range(START_DATA_ROW, out_row):
-            eind_val = ""
-            if col_eindacties is not None:
-                eind_val = ws_close.cell(row=r, column=col_eindacties).value
-
-            target_cell = ws_close.cell(row=r, column=col_finalecheck)
-
-            if not eind_val or str(eind_val).strip() == "":
-                # geen eindactie -> groen (klaar om af te ronden)
-                target_cell.fill = green_fill
-            else:
-                # wel eindactie -> oranje (nog iets te doen)
-                target_cell.fill = orange_fill
-
-            # we zorgen ook dat dit vak zichtbaar is qua hoogte
-            ws_close.row_dimensions[r].height = 40
-
-
-    # 4. Autofilter: apply starting from header row
-    if cols_final:
-        first_col_letter = get_column_letter(1)
-        last_col_letter = get_column_letter(len(cols_final))
-        last_data_row = out_row - 1  # last row we wrote
-        ws_close.auto_filter.ref = f"{first_col_letter}{HEADER_ROW}:{last_col_letter}{last_data_row}"
-
-    # 5. Freeze panes so header row stays visible when scrolling
-    ws_close.freeze_panes = f"A{START_DATA_ROW}"
-# ── END SECOND SHEET FILL ──
 
 # ── FILL THIRD SHEET ("Sheet3") WITH to_issue_df ──
 SHEET3_NAME = "Sheet3"  # moet overeenkomen met de tabnaam in je template
