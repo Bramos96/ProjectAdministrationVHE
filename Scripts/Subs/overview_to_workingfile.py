@@ -140,6 +140,20 @@ else:
     to_tier1_df = pd.DataFrame(columns=TIER1_BASE_COLS)
 # ── EINDE TIER 1 LIST ──
 
+# ── BUILD LIST OF TIER 2 PROJECTS (Sheet 'Tier2') ──
+TIER2_BASE_COLS = ["Projectnummer", "Projectleider", "Klant", "Omschrijving", "Checklist"]
+
+
+if "Tier 2" in df.columns:
+    # Neem alle projecten waar Tier 2 niet 0/NaN is
+    tier2_source = df[df["Tier 2"].fillna(0) != 0].copy()
+    to_tier2_df = tier2_source[[c for c in TIER2_BASE_COLS if c in tier2_source.columns]].copy()
+else:
+    # Als de kolom nog niet bestaat → lege lijst
+    to_tier2_df = pd.DataFrame(columns=TIER2_BASE_COLS)
+# ── EINDE TIER 2 LIST ──
+
+
 
 # ── BUILD LIST OF PROJECTS TO CLOSE ("Afsluiten" tab) ──
 CLOSE_COLS = [
@@ -643,6 +657,61 @@ if SHEET_TIER1_NAME in wb.sheetnames:
 
     ws_tier.freeze_panes = f"A{START_DATA_ROW_T}"
 # ── END TIER 1 SHEET FILL ──
+
+# ── FILL TIER 2 SHEET ("Tier2") WITH to_tier2_df ──
+SHEET_TIER2_NAME = "Tier2"  # tabnaam in je template
+
+if SHEET_TIER2_NAME in wb.sheetnames:
+    ws_tier2 = wb[SHEET_TIER2_NAME]
+
+    # Aanname:
+    # Row 1 = blauwe info-balk
+    # Row 2 = headers (Projectnummer, Projectleider, Klant, Omschrijving)
+    # Row 3+ = data
+    HEADER_ROW_T2 = 2
+    START_DATA_ROW_T2 = 3
+
+    # 1. Kolomvolgorde bepalen op basis van de headers in rij 2
+    cols_tier2 = []
+    for cell in ws_tier2[HEADER_ROW_T2]:
+        header_val = cell.value
+        if not header_val:
+            continue
+        if header_val in to_tier2_df.columns:
+            cols_tier2.append(header_val)
+
+    # 2. Oude data leegmaken (waarden wissen, opmaak laten staan)
+    max_rows_t2 = ws_tier2.max_row
+    max_cols_t2 = ws_tier2.max_column
+    for r in range(START_DATA_ROW_T2, max_rows_t2 + 1):
+        for c in range(1, max_cols_t2 + 1):
+            ws_tier2.cell(row=r, column=c).value = None
+
+    # 3. Nieuwe data schrijven
+    out_row_t2 = START_DATA_ROW_T2
+    for _, row_vals in to_tier2_df.iterrows():
+        for c_idx, col_name in enumerate(cols_tier2, start=1):
+            val = row_vals[col_name] if col_name in to_tier2_df.columns else ""
+            cell = ws_tier2.cell(row=out_row_t2, column=c_idx, value=val)
+            cell.alignment = Alignment(
+                horizontal="left",
+                vertical="top",
+                wrap_text=True
+            )
+        ws_tier2.row_dimensions[out_row_t2].height = 20
+        out_row_t2 += 1
+
+    # 4. Autofilter + freeze panes
+    if cols_tier2:
+        first_col_letter_t2 = get_column_letter(1)
+        last_col_letter_t2 = get_column_letter(len(cols_tier2))
+        last_data_row_t2 = out_row_t2 - 1
+        ws_tier2.auto_filter.ref = (
+            f"{first_col_letter_t2}{HEADER_ROW_T2}:{last_col_letter_t2}{last_data_row_t2}"
+        )
+
+    ws_tier2.freeze_panes = f"A{START_DATA_ROW_T2}"
+# ── END TIER 2 SHEET FILL ──
 
 
 # ── FILL THIRD SHEET ("Sheet3") WITH to_issue_df ──

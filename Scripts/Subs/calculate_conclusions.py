@@ -143,7 +143,13 @@ def make_informatie(row):
 # ───────────────────────────────────────────
 # WARNING-KOLOM (opbrengsten mismatch)
 # ───────────────────────────────────────────
+# ───────────────────────────────────────────
+# WARNING-KOLOM (opbrengsten mismatch + elders)
+# ───────────────────────────────────────────
 def make_warning(row):
+    messages = []
+
+    # 1) Opbrengsten mismatch
     def to_float(x):
         try:
             return float(x)
@@ -153,16 +159,17 @@ def make_warning(row):
     bo = to_float(row.get("Budget Opbrengsten"))
     wo = to_float(row.get("Werkelijke opbrengsten"))
 
-    # Als één van de twee ontbreekt → geen warning
-    if bo is None or wo is None:
-        return ""
+    if bo is not None and wo is not None and bo != wo:
+        messages.append("• Opbrengsten niet in orde")
 
-    # Als het niet gelijk is → warning
-    if bo != wo:
-        return "Opbrengsten niet in orde"
+    # 2) Wat vroeger in 'Actiepunten Elders' stond
+    elders_txt = make_actiepunten_elders(row)
+    if elders_txt:
+        messages.append(elders_txt)   # dit kan meerdere bullets bevatten met \n
 
-    # Exact gelijk → geen melding
-    return ""
+    # Alles samen in 1 Warning-veld
+    return "\n".join(messages)
+
 
 
 # ───────────────────────────────────────────
@@ -188,8 +195,11 @@ def make_proto_prod(row):
 # TIERS OP BASIS VAN 5 CHECKS
 # ───────────────────────────────────────────
 
-def _tier_checks_count(row) -> int:
-    """Geef terug hoeveel van de 4 checks zijn behaald."""
+def _tier_flags(row):
+    """
+    Geeft de 4 ruwe booleans terug die we voor tiers gebruiken:
+    (closed_indicator, warning_empty, sluiten_ok, bram_empty)
+    """
 
     # Check 1: Verkooporder gesloten indicator
     cols_closed = ["Openstaande bestelling", "Openstaande SO", "Openstaande PO"]
@@ -221,9 +231,13 @@ def _tier_checks_count(row) -> int:
     else:
         bram_empty = str(v_bram).strip() == ""
 
-    checks = [closed_indicator, warning_empty, sluiten_ok, bram_empty]
-    return sum(1 for ok in checks if ok)
+    return closed_indicator, warning_empty, sluiten_ok, bram_empty
 
+
+def _tier_checks_count(row) -> int:
+    """Geef terug hoeveel van de 4 checks zijn behaald."""
+    flags = _tier_flags(row)  # (closed_indicator, warning_empty, sluiten_ok, bram_empty)
+    return sum(1 for ok in flags if ok)
 
 def make_tier1(row):
     return _tier_checks_count(row) == 4
@@ -239,6 +253,33 @@ def make_tier4(row):
 
 def make_tier5(row):
     return _tier_checks_count(row) == 0
+
+def make_checklist(row):
+    """
+    Bouwt een checklist met wat nog moet gebeuren om Tier 1 te behalen.
+    Leeg = project voldoet al aan alle checks.
+    """
+    closed_indicator, warning_empty, sluiten_ok, bram_empty = _tier_flags(row)
+
+    bullets = []
+
+    # 1) Verkooporder indicator (openstaande bestelling/SO/PO)
+    if not closed_indicator:
+        bullets.append("• Verkooporder staat nog open.")
+
+    # 2) Warning nog niet opgelost
+    if not warning_empty:
+        bullets.append("• Los alle punten in 'Warning' op.")
+
+    # 3) Sluiten != Ja → geen goedkeuring PL
+    if not sluiten_ok:
+        bullets.append("• Nog geen goedkeuring voor afsluiten van Projectleider.")
+
+    # 4) Actiepunten Bram nog niet leeg
+    if not bram_empty:
+        bullets.append("• Werk 'Actiepunten Bram' volledig af.")
+
+    return "\n".join(bullets)
 
 
 # ───────────────────────────────────────────
@@ -300,13 +341,14 @@ def main():
     df["Informatie"] = df.apply(make_informatie, axis=1)
     df["Warning"] = df.apply(make_warning, axis=1)
     df["Bespreekpunten"] = df.apply(make_bespreekpunten, axis=1)
-    df["Actiepunten Elders"] = df.apply(make_actiepunten_elders, axis=1)
     df["Proto/Prod"] = df.apply(make_proto_prod, axis=1)
     df["Tier 1"] = df.apply(make_tier1, axis=1)
     df["Tier 2"] = df.apply(make_tier2, axis=1)
     df["Tier 3"] = df.apply(make_tier3, axis=1)
     df["Tier 4"] = df.apply(make_tier4, axis=1)
     df["Tier 5"] = df.apply(make_tier5, axis=1)
+    df["Checklist"] = df.apply(make_checklist, axis=1)
+
 
     # Convert booleans to 0/1 for Power BI compatibility
     for col in ["Tier 1", "Tier 2", "Tier 3", "Tier 4", "Tier 5"]:
@@ -323,6 +365,8 @@ def main():
     for cell in ws[1]:
         if cell.value:
             col_letters[cell.value.strip()] = cell.column_letter
+
+
 
     # Voeg Informatie toe als header niet bestaat
     if "Informatie" not in col_letters:
@@ -402,20 +446,23 @@ def main():
     write_column("Actiepunten Projectleider")
     write_column("Bespreekpunten")
     write_column("Informatie")
-    write_column("Warning") 
-    write_column("Actiepunten Elders")
+    write_column("Warning")
     write_column("Proto/Prod")
     write_column("Tier 1")
     write_column("Tier 2")
     write_column("Tier 3")
     write_column("Tier 4")
     write_column("Tier 5")
+    write_column("Checklist")
+
 
 
 
     # ZET INFORMATIE OP BREEDTE 50
     ws.column_dimensions[col_letters["Informatie"]].width = 50
     ws.column_dimensions[col_letters["Warning"]].width = 50
+    ws.column_dimensions[col_letters["Checklist"]].width = 50
+
 
     wb.save(path)
     print(f"\n  Script afgerond — gegevens opgeslagen in: {os.path.basename(path)}\n")
