@@ -211,9 +211,30 @@ def main():
                             # -------------------------------------------------
                             # 3) Standaard synchronisatie
                             # -------------------------------------------------
+                                                        # -------------------------------------------------
+                            # 3) Standaard synchronisatie  (ook leegmaken toestaan)
+                            # -------------------------------------------------
                             else:
-                                if pd.notna(new_val) and str(new_val).strip() != str(old_val).strip():
-                                    ws[cell_ref].value = new_val
+                                # Normaliseer new_val
+                                if pd.isna(new_val):
+                                    new_clean = ""
+                                else:
+                                    new_clean = str(new_val).strip()
+
+                                # Normaliseer old_val
+                                if old_val is None:
+                                    old_clean = ""
+                                else:
+                                    old_clean = str(old_val).strip()
+
+                                # Alleen updaten als er verschil is
+                                if new_clean != old_clean:
+                                    if new_clean == "":
+                                        # Leegmaken van waarde
+                                        ws[cell_ref].value = None
+                                    else:
+                                        # Normale update
+                                        ws[cell_ref].value = new_val
                                     updates += 1
 
 
