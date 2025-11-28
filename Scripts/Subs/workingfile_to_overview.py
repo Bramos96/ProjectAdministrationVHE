@@ -5,9 +5,9 @@ from openpyxl.utils import get_column_letter #converts numeric column index to l
 from openpyxl.styles import Font # or applying cell formatting 
 import time # can be used if time is used. Isn't used. perhaps can be deleted. 
 
-WORKING_FILE = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Werkbestand Projectadministratie.xlsx"
-MAPPING_FILE = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Kolommenmapping per bron.xlsx"
-OUTPUT_FOLDER = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output"
+WORKING_FILE = r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Werkbestand Projectadministratie.xlsx"
+MAPPING_FILE = r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Kolommenmapping per bron.xlsx"
+OUTPUT_FOLDER = r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Output"
 
 SYNC_COLUMNS = [
     "Algemene informatie",

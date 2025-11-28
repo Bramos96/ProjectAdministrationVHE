@@ -5,10 +5,11 @@ import xlsxwriter.utility as xl_utils
 
 # ───────────────────────────────────────────────────────────
 # PAS JE PADEN HIER AAN
-INPUT_FOLDER = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Input" # The location to where it checks input files
-CENTRAL_FILE = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Overzicht Projectadministratie.xlsx" # The script will use this as lay-out. 
-MAPPING_FILE = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Kolommenmapping per bron.xlsx" # Overview of what columnheaders are used in which file in order to match. Also define if information should be imported or ignored. 
-OUTPUT_FOLDER = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output" # The location to where it puts new files> ()
+INPUT_FOLDER = r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Input"
+CENTRAL_FILE = r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Overzicht Projectadministratie.xlsx"
+MAPPING_FILE = r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Kolommenmapping per bron.xlsx"
+OUTPUT_FOLDER = r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Output"
+
 # ───────────────────────────────────────────────────────────
 
 logging.basicConfig(level=logging.DEBUG, format="%(message)s") # Dit zorgt er voor dat de loggings correct gaat. 

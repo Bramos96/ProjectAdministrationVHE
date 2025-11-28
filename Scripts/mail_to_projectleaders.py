@@ -7,8 +7,8 @@ import win32com.client as win32
 from collections import defaultdict
 
 # ───────────────────────────────────────────────────────────
-OUTPUT_FOLDER   = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output"
-EMAILMAP_FILE   = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Projectleiders.xlsx"
+OUTPUT_FOLDER   = r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Output"
+EMAILMAP_FILE   = r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Projectleiders.xlsx"
 EMAILMAP_SHEET  = "Sheet1"
 OVERVIEW_SHEET  = "Overzicht"
 TESTMODE        = False  # Alles naar jezelf, maar ontvanger-whitelist blijft verplicht en e-mail moet geldig zijn
@@ -109,8 +109,7 @@ required_cols = [
     "Projectleider",
     "Klant",
     "Omschrijving",
-    "Actiepunten Projectleider",
-    "Actiepunten Elders",
+    "Actiepunten Projectleider"
 ]
 
 missing = [c for c in required_cols if c not in df.columns]

@@ -326,7 +326,7 @@ def main():
     year = today.year
 
     from pathlib import Path
-    files = list(Path(r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output").glob(
+    files = list(Path(r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Output").glob(
         "Overzicht_Projectadministratie_Week*.xlsx"
     ))
     if not files:

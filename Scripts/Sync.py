@@ -8,8 +8,8 @@ print("✅ sync.py is gestart!")
 
 # ───────────────────────────────────────────────
 # PAS PADEN AAN NAAR JOUW MAPPEN
-SCRIPTS_DIR = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Scripts\Subs"
-LOGS_DIR = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Logs"
+SCRIPTS_DIR = r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Scripts\Subs"
+LOGS_DIR = r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Logs"
 os.makedirs(LOGS_DIR, exist_ok=True)
 
 # ───────────────────────────────────────────────

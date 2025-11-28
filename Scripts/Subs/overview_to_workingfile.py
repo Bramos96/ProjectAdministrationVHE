@@ -8,9 +8,9 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
 # ───────────────────────────────────────────────────────────
-OUTPUT_FOLDER = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Output"
-TEMPLATE_FILE = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Werkbestand Projectadministratie.xlsx"
-MAPPING_FILE  = r"C:\Users\bram.gerrits\Desktop\Automations\ProjectAdministration\Kolommenmapping per bron.xlsx"
+OUTPUT_FOLDER = r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Output"
+TEMPLATE_FILE = r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Werkbestand Projectadministratie.xlsx"
+MAPPING_FILE  = r"C:\Users\bram.gerrits\Desktop\Automations\Finance\ProjectAdministration\Kolommenmapping per bron.xlsx"
 WORK_ARCHIVE  = os.path.join(OUTPUT_FOLDER, "Werkbestanden archief")
 # ───────────────────────────────────────────────────────────
 
